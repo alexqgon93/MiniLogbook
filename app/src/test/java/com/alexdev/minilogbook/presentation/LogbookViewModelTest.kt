@@ -26,7 +26,6 @@ import org.junit.jupiter.api.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class LogbookViewModelTest {
-
     private val testDispatcher = StandardTestDispatcher()
     private val getBgEntriesUseCase: GetBgEntriesUseCase = mockk()
     private val saveBgEntryUseCase: SaveBgEntryUseCase = mockk(relaxed = true)
@@ -48,7 +47,6 @@ class LogbookViewModelTest {
 
     @Nested
     inner class InitialState {
-
         @Test
         fun `GIVEN viewModel created WHEN no events fired THEN default state is correct`() =
             runTest {
@@ -62,18 +60,20 @@ class LogbookViewModelTest {
 
     @Nested
     inner class InputValidation {
+        @Test
+        fun `GIVEN empty input WHEN handleInputChange THEN no error shown`() =
+            runTest {
+                viewModel.onHandleUiEvent(LogbookUiEvent.UpdateInputValue(""))
+                viewModel.uiState.value.inputError
+                    .shouldBeNull()
+            }
 
         @Test
-        fun `GIVEN empty input WHEN handleInputChange THEN no error shown`() = runTest {
-            viewModel.onHandleUiEvent(LogbookUiEvent.UpdateInputValue(""))
-            viewModel.uiState.value.inputError.shouldBeNull()
-        }
-
-        @Test
-        fun `GIVEN non numeric input WHEN handleInputChange THEN invalid number error`() = runTest {
-            viewModel.onHandleUiEvent(LogbookUiEvent.UpdateInputValue("abc"))
-            viewModel.uiState.value.inputError shouldBe "Invalid number"
-        }
+        fun `GIVEN non numeric input WHEN handleInputChange THEN invalid number error`() =
+            runTest {
+                viewModel.onHandleUiEvent(LogbookUiEvent.UpdateInputValue("abc"))
+                viewModel.uiState.value.inputError shouldBe "Invalid number"
+            }
 
         @Test
         fun `GIVEN value below min WHEN handleInputChange THEN exact below min error shown`() =
@@ -90,22 +90,24 @@ class LogbookViewModelTest {
             }
 
         @Test
-        fun `GIVEN valid value WHEN handleInputChange THEN no error and input updated`() = runTest {
-            viewModel.onHandleUiEvent(LogbookUiEvent.UpdateInputValue("5.5"))
-            viewModel.uiState.value.inputError.shouldBeNull()
-            viewModel.uiState.value.inputValue shouldBe "5.5"
-        }
+        fun `GIVEN valid value WHEN handleInputChange THEN no error and input updated`() =
+            runTest {
+                viewModel.onHandleUiEvent(LogbookUiEvent.UpdateInputValue("5.5"))
+                viewModel.uiState.value.inputError
+                    .shouldBeNull()
+                viewModel.uiState.value.inputValue shouldBe "5.5"
+            }
     }
 
     @Nested
     inner class UnitChange {
-
         @Test
-        fun `GIVEN mmol input WHEN unit changes to mgdl THEN input is converted`() = runTest {
-            viewModel.onHandleUiEvent(LogbookUiEvent.UpdateInputValue("5.0"))
-            viewModel.onHandleUiEvent(LogbookUiEvent.ChangeUnit(BgUnit.MGDL))
-            viewModel.uiState.value.inputValue shouldBe "90.09"
-        }
+        fun `GIVEN mmol input WHEN unit changes to mgdl THEN input is converted`() =
+            runTest {
+                viewModel.onHandleUiEvent(LogbookUiEvent.UpdateInputValue("5.0"))
+                viewModel.onHandleUiEvent(LogbookUiEvent.ChangeUnit(BgUnit.MGDL))
+                viewModel.uiState.value.inputValue shouldBe "90.09"
+            }
 
         @Test
         fun `GIVEN mgdl unit WHEN unit changes back to mmol THEN input is converted back`() =
@@ -117,17 +119,19 @@ class LogbookViewModelTest {
             }
 
         @Test
-        fun `GIVEN empty input WHEN unit changes THEN input stays empty`() = runTest {
-            viewModel.onHandleUiEvent(LogbookUiEvent.ChangeUnit(BgUnit.MGDL))
-            viewModel.uiState.value.inputValue shouldBe ""
-        }
+        fun `GIVEN empty input WHEN unit changes THEN input stays empty`() =
+            runTest {
+                viewModel.onHandleUiEvent(LogbookUiEvent.ChangeUnit(BgUnit.MGDL))
+                viewModel.uiState.value.inputValue shouldBe ""
+            }
 
         @Test
         fun `GIVEN entries exist WHEN unit changes to mgdl THEN average recomputed in mgdl`() =
             runTest {
-                every { getBgEntriesUseCase() } returns flowOf(
-                    listOf(BgEntry(valueInMmol = 5.0, timestamp = 1000L))
-                )
+                every { getBgEntriesUseCase() } returns
+                    flowOf(
+                        listOf(BgEntry(valueInMmol = 5.0, timestamp = 1000L)),
+                    )
                 viewModel =
                     LogbookViewModel(getBgEntriesUseCase, saveBgEntryUseCase, bgValueFormatter)
                 advanceUntilIdle()
@@ -139,9 +143,10 @@ class LogbookViewModelTest {
         @Test
         fun `GIVEN mgdl unit selected WHEN entries collected THEN average displayed in mgdl`() =
             runTest {
-                every { getBgEntriesUseCase() } returns flowOf(
-                    listOf(BgEntry(valueInMmol = 5.0, timestamp = 1000L))
-                )
+                every { getBgEntriesUseCase() } returns
+                    flowOf(
+                        listOf(BgEntry(valueInMmol = 5.0, timestamp = 1000L)),
+                    )
                 viewModel =
                     LogbookViewModel(getBgEntriesUseCase, saveBgEntryUseCase, bgValueFormatter)
                 viewModel.onHandleUiEvent(LogbookUiEvent.ChangeUnit(BgUnit.MGDL))
@@ -153,75 +158,83 @@ class LogbookViewModelTest {
 
     @Nested
     inner class Save {
+        @Test
+        fun `GIVEN blank input WHEN handleSave THEN error shown and save not called`() =
+            runTest {
+                viewModel.onHandleUiEvent(LogbookUiEvent.SaveReading)
+                viewModel.uiState.value.inputError shouldBe "Value is required"
+                coVerify(exactly = 0) { saveBgEntryUseCase(any()) }
+            }
 
         @Test
-        fun `GIVEN blank input WHEN handleSave THEN error shown and save not called`() = runTest {
-            viewModel.onHandleUiEvent(LogbookUiEvent.SaveReading)
-            viewModel.uiState.value.inputError shouldBe "Value is required"
-            coVerify(exactly = 0) { saveBgEntryUseCase(any()) }
-        }
+        fun `GIVEN invalid input WHEN handleSave THEN invalid number error shown`() =
+            runTest {
+                viewModel.onHandleUiEvent(LogbookUiEvent.UpdateInputValue("abc"))
+                viewModel.onHandleUiEvent(LogbookUiEvent.SaveReading)
+                viewModel.uiState.value.inputError shouldBe "Invalid number"
+            }
 
         @Test
-        fun `GIVEN invalid input WHEN handleSave THEN invalid number error shown`() = runTest {
-            viewModel.onHandleUiEvent(LogbookUiEvent.UpdateInputValue("abc"))
-            viewModel.onHandleUiEvent(LogbookUiEvent.SaveReading)
-            viewModel.uiState.value.inputError shouldBe "Invalid number"
-        }
+        fun `GIVEN valid input WHEN handleSave THEN save delegated and input cleared`() =
+            runTest {
+                viewModel.onHandleUiEvent(LogbookUiEvent.UpdateInputValue("6.5"))
+                viewModel.onHandleUiEvent(LogbookUiEvent.SaveReading)
+                advanceUntilIdle()
+
+                coVerify(exactly = 1) { saveBgEntryUseCase(any()) }
+                viewModel.uiState.value.inputValue shouldBe ""
+                viewModel.uiState.value.inputError
+                    .shouldBeNull()
+            }
 
         @Test
-        fun `GIVEN valid input WHEN handleSave THEN save delegated and input cleared`() = runTest {
-            viewModel.onHandleUiEvent(LogbookUiEvent.UpdateInputValue("6.5"))
-            viewModel.onHandleUiEvent(LogbookUiEvent.SaveReading)
-            advanceUntilIdle()
+        fun `GIVEN save fails WHEN handleSave THEN save failed error shown`() =
+            runTest {
+                coEvery { saveBgEntryUseCase(any()) } throws RuntimeException("DB error")
+                viewModel.onHandleUiEvent(LogbookUiEvent.UpdateInputValue("6.5"))
+                viewModel.onHandleUiEvent(LogbookUiEvent.SaveReading)
+                advanceUntilIdle()
 
-            coVerify(exactly = 1) { saveBgEntryUseCase(any()) }
-            viewModel.uiState.value.inputValue shouldBe ""
-            viewModel.uiState.value.inputError.shouldBeNull()
-        }
-
-        @Test
-        fun `GIVEN save fails WHEN handleSave THEN save failed error shown`() = runTest {
-            coEvery { saveBgEntryUseCase(any()) } throws RuntimeException("DB error")
-            viewModel.onHandleUiEvent(LogbookUiEvent.UpdateInputValue("6.5"))
-            viewModel.onHandleUiEvent(LogbookUiEvent.SaveReading)
-            advanceUntilIdle()
-
-            viewModel.uiState.value.inputError shouldBe "Failed to save. Please try again."
-        }
+                viewModel.uiState.value.inputError shouldBe "Failed to save. Please try again."
+            }
     }
 
     @Nested
     inner class Average {
+        @Test
+        fun `GIVEN empty entries WHEN collected THEN average shows dash`() =
+            runTest {
+                advanceUntilIdle()
+                viewModel.uiState.value.averageDisplay shouldBe "-"
+            }
 
         @Test
-        fun `GIVEN empty entries WHEN collected THEN average shows dash`() = runTest {
-            advanceUntilIdle()
-            viewModel.uiState.value.averageDisplay shouldBe "-"
-        }
+        fun `GIVEN single entry WHEN collected THEN average equals entry value`() =
+            runTest {
+                every { getBgEntriesUseCase() } returns
+                    flowOf(
+                        listOf(BgEntry(valueInMmol = 6.0, timestamp = 1000L)),
+                    )
+                viewModel = LogbookViewModel(getBgEntriesUseCase, saveBgEntryUseCase, bgValueFormatter)
+                advanceUntilIdle()
+
+                viewModel.uiState.value.averageDisplay shouldBe "6.00"
+            }
 
         @Test
-        fun `GIVEN single entry WHEN collected THEN average equals entry value`() = runTest {
-            every { getBgEntriesUseCase() } returns flowOf(
-                listOf(BgEntry(valueInMmol = 6.0, timestamp = 1000L))
-            )
-            viewModel = LogbookViewModel(getBgEntriesUseCase, saveBgEntryUseCase, bgValueFormatter)
-            advanceUntilIdle()
+        fun `GIVEN multiple entries WHEN collected THEN average computed correctly`() =
+            runTest {
+                every { getBgEntriesUseCase() } returns
+                    flowOf(
+                        listOf(
+                            BgEntry(valueInMmol = 4.0, timestamp = 1000L),
+                            BgEntry(valueInMmol = 8.0, timestamp = 2000L),
+                        ),
+                    )
+                viewModel = LogbookViewModel(getBgEntriesUseCase, saveBgEntryUseCase, bgValueFormatter)
+                advanceUntilIdle()
 
-            viewModel.uiState.value.averageDisplay shouldBe "6.00"
-        }
-
-        @Test
-        fun `GIVEN multiple entries WHEN collected THEN average computed correctly`() = runTest {
-            every { getBgEntriesUseCase() } returns flowOf(
-                listOf(
-                    BgEntry(valueInMmol = 4.0, timestamp = 1000L),
-                    BgEntry(valueInMmol = 8.0, timestamp = 2000L)
-                )
-            )
-            viewModel = LogbookViewModel(getBgEntriesUseCase, saveBgEntryUseCase, bgValueFormatter)
-            advanceUntilIdle()
-
-            viewModel.uiState.value.averageDisplay shouldBe "6.00"
-        }
+                viewModel.uiState.value.averageDisplay shouldBe "6.00"
+            }
     }
 }

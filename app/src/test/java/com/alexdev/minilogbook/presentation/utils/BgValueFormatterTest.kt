@@ -5,7 +5,6 @@ import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class BgValueFormatterTest {
-
     private val formatter = BgValueFormatter()
 
     @Test

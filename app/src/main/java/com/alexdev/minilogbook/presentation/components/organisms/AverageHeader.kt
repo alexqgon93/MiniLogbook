@@ -22,16 +22,19 @@ import com.alexdev.minilogbook.domain.model.label
 import com.alexdev.minilogbook.ui.theme.MiniLogbookTheme
 
 @Composable
-fun AverageHeader(average: String, unit: BgUnit) {
+fun AverageHeader(
+    average: String,
+    unit: BgUnit,
+) {
     val (background, textColor) = getAverageStatusColors(average = average, unit = unit)
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                color = background,
-                shape = RoundedCornerShape(size = 12.dp)
-            )
-            .padding(all = 16.dp),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .background(
+                    color = background,
+                    shape = RoundedCornerShape(size = 12.dp),
+                ).padding(all = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
@@ -39,18 +42,22 @@ fun AverageHeader(average: String, unit: BgUnit) {
             style = MaterialTheme.typography.bodyLarge,
             color = textColor,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(top = 4.dp)
+            modifier = Modifier.padding(top = 4.dp),
         )
         HorizontalDivider(modifier = Modifier.padding(top = 8.dp))
     }
 }
 
-private fun getAverageStatusColors(average: String, unit: BgUnit): Pair<Color, Color> {
+private fun getAverageStatusColors(
+    average: String,
+    unit: BgUnit,
+): Pair<Color, Color> {
     val value = average.toDoubleOrNull() ?: return Color(0xFFF5F5F5) to Color(0xFF757575)
-    val (lowerThreshold, normalMax, highMax) = when (unit) {
-        BgUnit.MMOL -> Triple(4.0, 7.0, 11.0)
-        BgUnit.MGDL -> Triple(72.07, 126.13, 198.20)
-    }
+    val (lowerThreshold, normalMax, highMax) =
+        when (unit) {
+            BgUnit.MMOL -> Triple(4.0, 7.0, 11.0)
+            BgUnit.MGDL -> Triple(72.07, 126.13, 198.20)
+        }
 
     return when {
         average == "--" -> Color(0xFFF5F5F5) to Color(0xFF9E9E9E)
@@ -63,18 +70,21 @@ private fun getAverageStatusColors(average: String, unit: BgUnit): Pair<Color, C
 
 @Preview(showBackground = true, name = "mmol/L")
 @Composable
-private fun AverageHeaderPreviewMmol() = MiniLogbookTheme {
-    AverageHeader(average = "5.50", unit = BgUnit.MMOL)
-}
+private fun AverageHeaderPreviewMmol() =
+    MiniLogbookTheme {
+        AverageHeader(average = "5.50", unit = BgUnit.MMOL)
+    }
 
 @Preview(showBackground = true, name = "mg/dL")
 @Composable
-private fun AverageHeaderPreviewMgDl() = MiniLogbookTheme {
-    AverageHeader(average = "122.00", unit = BgUnit.MGDL)
-}
+private fun AverageHeaderPreviewMgDl() =
+    MiniLogbookTheme {
+        AverageHeader(average = "122.00", unit = BgUnit.MGDL)
+    }
 
 @Preview(showBackground = true, name = "Empty state")
 @Composable
-private fun AverageHeaderPreviewEmpty() = MiniLogbookTheme {
-    AverageHeader(average = "--", unit = BgUnit.MMOL)
-}
+private fun AverageHeaderPreviewEmpty() =
+    MiniLogbookTheme {
+        AverageHeader(average = "--", unit = BgUnit.MMOL)
+    }

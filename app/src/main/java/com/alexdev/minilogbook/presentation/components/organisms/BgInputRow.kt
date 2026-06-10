@@ -28,17 +28,17 @@ fun BgInputRow(
         value = value,
         unitLabel = unitLabel,
         isError = error != null,
-        onValueChange = onValueChange
+        onValueChange = onValueChange,
     )
     InputErrorText(error = error)
     Row(
         horizontalArrangement = Arrangement.End,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
     ) {
         OutlinedButton(
             onClick = onSave,
             enabled = error == null && value.isNotEmpty(),
-            modifier = Modifier.padding(top = 8.dp)
+            modifier = Modifier.padding(top = 8.dp),
         ) {
             Text(text = "Save", style = MaterialTheme.typography.bodySmall)
         }
@@ -47,36 +47,39 @@ fun BgInputRow(
 
 @Preview(showBackground = true, name = "Idle - mmol/L")
 @Composable
-private fun BgInputRowPreviewIdle() = MiniLogbookTheme {
-    BgInputRow(
-        value = "5.5",
-        unitLabel = "mmol/L",
-        error = null,
-        onValueChange = {},
-        onSave = {},
-    )
-}
+private fun BgInputRowPreviewIdle() =
+    MiniLogbookTheme {
+        BgInputRow(
+            value = "5.5",
+            unitLabel = "mmol/L",
+            error = null,
+            onValueChange = {},
+            onSave = {},
+        )
+    }
 
 @Preview(showBackground = true, name = "Error state")
 @Composable
-private fun BgInputRowPreviewError() = MiniLogbookTheme {
-    BgInputRow(
-        value = "-3",
-        unitLabel = "mmol/L",
-        error = "Must be >= 0",
-        onValueChange = {},
-        onSave = {},
-    )
-}
+private fun BgInputRowPreviewError() =
+    MiniLogbookTheme {
+        BgInputRow(
+            value = "-3",
+            unitLabel = "mmol/L",
+            error = "Must be >= 0",
+            onValueChange = {},
+            onSave = {},
+        )
+    }
 
 @Preview(showBackground = true, name = "Empty - Save disabled")
 @Composable
-private fun BgInputRowPreviewEmpty() = MiniLogbookTheme {
-    BgInputRow(
-        value = "",
-        unitLabel = "mg/dL",
-        error = null,
-        onValueChange = {},
-        onSave = {},
-    )
-}
+private fun BgInputRowPreviewEmpty() =
+    MiniLogbookTheme {
+        BgInputRow(
+            value = "",
+            unitLabel = "mg/dL",
+            error = null,
+            onValueChange = {},
+            onSave = {},
+        )
+    }

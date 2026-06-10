@@ -24,27 +24,30 @@ fun UnitRadioButton(
     onSelected: () -> Unit,
 ) = Row(
     verticalAlignment = Alignment.CenterVertically,
-    modifier = modifier
-        .fillMaxWidth()
-        .clickable(onClick = onSelected)
-        .padding(vertical = 4.dp)
+    modifier =
+        modifier
+            .fillMaxWidth()
+            .clickable(onClick = onSelected)
+            .padding(vertical = 4.dp),
 ) {
     RadioButton(selected = selected, onClick = onSelected)
     Text(
         modifier = Modifier.padding(start = 4.dp),
         text = unit.label(),
-        style = MaterialTheme.typography.bodyLarge
+        style = MaterialTheme.typography.bodyLarge,
     )
 }
 
 @Preview(showBackground = true, name = "Selected")
 @Composable
-private fun UnitRadioButtonPreviewSelected() = MiniLogbookTheme {
-    UnitRadioButton(unit = BgUnit.MMOL, selected = true, onSelected = {})
-}
+private fun UnitRadioButtonPreviewSelected() =
+    MiniLogbookTheme {
+        UnitRadioButton(unit = BgUnit.MMOL, selected = true, onSelected = {})
+    }
 
 @Preview(showBackground = true, name = "Unselected")
 @Composable
-private fun UnitRadioButtonPreviewUnSelected() = MiniLogbookTheme {
-    UnitRadioButton(unit = BgUnit.MGDL, selected = false, onSelected = {})
-}
+private fun UnitRadioButtonPreviewUnSelected() =
+    MiniLogbookTheme {
+        UnitRadioButton(unit = BgUnit.MGDL, selected = false, onSelected = {})
+    }

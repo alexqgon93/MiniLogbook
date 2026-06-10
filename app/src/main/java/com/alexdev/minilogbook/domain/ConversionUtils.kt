@@ -12,14 +12,19 @@ fun Double.toMgdl(): Double = this * CONVERSION_FACTOR
 
 fun Double.toMmol(): Double = this / CONVERSION_FACTOR
 
-fun Double.convertTo(from: BgUnit, to: BgUnit): Double = when (from) {
-    to -> this
-    BgUnit.MMOL -> toMgdl()
-    else -> toMmol()
-}
+fun Double.convertTo(
+    from: BgUnit,
+    to: BgUnit,
+): Double =
+    when (from) {
+        to -> this
+        BgUnit.MMOL -> toMgdl()
+        else -> toMmol()
+    }
 
-fun getBgRangeLimits(unit: BgUnit): Pair<Double, Double> = if (unit == BgUnit.MMOL) {
-    BG_MIN_MMOL to BG_MAX_MMOL
-} else {
-    BG_MIN_MG_DL to BG_MAX_MG_DL
-}
+fun getBgRangeLimits(unit: BgUnit): Pair<Double, Double> =
+    if (unit == BgUnit.MMOL) {
+        BG_MIN_MMOL to BG_MAX_MMOL
+    } else {
+        BG_MIN_MG_DL to BG_MAX_MG_DL
+    }

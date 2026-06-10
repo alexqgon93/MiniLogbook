@@ -26,21 +26,26 @@ import java.util.Date
 import java.util.Locale
 
 @Composable
-fun EntryItem(entry: BgEntry, unit: BgUnit) {
+fun EntryItem(
+    entry: BgEntry,
+    unit: BgUnit,
+) {
     val displayValue =
         entry.valueInMmol.convertTo(from = BgUnit.MMOL, to = unit).let { "%.2f".format(it) }
-    val formattedTime = remember(entry.timestamp) {
-        SimpleDateFormat("dd MMM, HH:mm", Locale.getDefault()).format(Date(entry.timestamp))
-    }
+    val formattedTime =
+        remember(entry.timestamp) {
+            SimpleDateFormat("dd MMM, HH:mm", Locale.getDefault()).format(Date(entry.timestamp))
+        }
     val (backgroundColor, textColor) = getGlucoseStatusColors(entry.valueInMmol, unit = unit)
 
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp)
-            .animateContentSize()
-            .background(color = backgroundColor, shape = RoundedCornerShape(size = 8.dp))
-            .padding(all = 12.dp),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp)
+                .animateContentSize()
+                .background(color = backgroundColor, shape = RoundedCornerShape(size = 8.dp))
+                .padding(all = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(text = formattedTime, style = MaterialTheme.typography.bodyMedium)
@@ -48,16 +53,20 @@ fun EntryItem(entry: BgEntry, unit: BgUnit) {
             text = "$displayValue ${unit.label()}",
             style = MaterialTheme.typography.bodyMedium,
             color = textColor,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
     }
 }
 
-private fun getGlucoseStatusColors(valueInMmol: Double, unit: BgUnit): Pair<Color, Color> {
-    val (lowerThreshold, normalMax, highMax) = when (unit) {
-        BgUnit.MMOL -> Triple(4.0, 7.0, 11.0)
-        BgUnit.MGDL -> Triple(72.07, 126.13, 198.20)
-    }
+private fun getGlucoseStatusColors(
+    valueInMmol: Double,
+    unit: BgUnit,
+): Pair<Color, Color> {
+    val (lowerThreshold, normalMax, highMax) =
+        when (unit) {
+            BgUnit.MMOL -> Triple(4.0, 7.0, 11.0)
+            BgUnit.MGDL -> Triple(72.07, 126.13, 198.20)
+        }
     val displayValue = valueInMmol.convertTo(from = BgUnit.MMOL, to = unit)
     return when {
         displayValue < lowerThreshold -> Color(0xFFFFEBEE) to Color(0xFFC62828)
@@ -69,26 +78,30 @@ private fun getGlucoseStatusColors(valueInMmol: Double, unit: BgUnit): Pair<Colo
 
 @Preview(showBackground = true, name = "mmol/L")
 @Composable
-private fun EntryItemPreviewMmol() = MiniLogbookTheme {
-    EntryItem(
-        entry = BgEntry(
-            id = 1,
-            valueInMmol = 5.5,
-            timestamp = System.currentTimeMillis()
-        ),
-        unit = BgUnit.MMOL
-    )
-}
+private fun EntryItemPreviewMmol() =
+    MiniLogbookTheme {
+        EntryItem(
+            entry =
+                BgEntry(
+                    id = 1,
+                    valueInMmol = 5.5,
+                    timestamp = System.currentTimeMillis(),
+                ),
+            unit = BgUnit.MMOL,
+        )
+    }
 
 @Preview(showBackground = true, name = "mg/dL")
 @Composable
-private fun EntryItemPreviewMgDL() = MiniLogbookTheme {
-    EntryItem(
-        entry = BgEntry(
-            id = 1,
-            valueInMmol = 5.5,
-            timestamp = System.currentTimeMillis()
-        ),
-        unit = BgUnit.MGDL
-    )
-}
+private fun EntryItemPreviewMgDL() =
+    MiniLogbookTheme {
+        EntryItem(
+            entry =
+                BgEntry(
+                    id = 1,
+                    valueInMmol = 5.5,
+                    timestamp = System.currentTimeMillis(),
+                ),
+            unit = BgUnit.MGDL,
+        )
+    }

@@ -1,8 +1,8 @@
 package com.alexdev.minilogbook.data.local
 
 import androidx.room.Dao
-import androidx.room.Query
 import androidx.room.Insert
+import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
 @Dao

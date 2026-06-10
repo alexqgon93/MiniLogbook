@@ -18,10 +18,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alexdev.minilogbook.R
 import com.alexdev.minilogbook.domain.model.BgUnit
 import com.alexdev.minilogbook.domain.model.label
+import com.alexdev.minilogbook.presentation.components.molecules.UnitSelector
 import com.alexdev.minilogbook.presentation.components.organisms.AverageHeader
 import com.alexdev.minilogbook.presentation.components.organisms.BgInputRow
 import com.alexdev.minilogbook.presentation.components.organisms.EntryList
-import com.alexdev.minilogbook.presentation.components.molecules.UnitSelector
 import com.alexdev.minilogbook.presentation.preview.previewEntriesList
 import com.alexdev.minilogbook.ui.theme.MiniLogbookTheme
 
@@ -31,89 +31,98 @@ fun LogbookScreen(viewModel: LogbookViewModel = hiltViewModel()) {
 
     LogbookContent(
         state = state,
-        onEvent = viewModel::onHandleUiEvent
+        onEvent = viewModel::onHandleUiEvent,
     )
 }
 
 @Composable
-internal fun LogbookContent(state: LogbookUiState, onEvent: (LogbookUiEvent) -> Unit) =
-    Scaffold { paddingValues ->
-        Column(
-            modifier = Modifier
+internal fun LogbookContent(
+    state: LogbookUiState,
+    onEvent: (LogbookUiEvent) -> Unit,
+) = Scaffold { paddingValues ->
+    Column(
+        modifier =
+            Modifier
                 .padding(paddingValues)
                 .fillMaxSize()
                 .padding(horizontal = 16.dp, vertical = 24.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            AverageHeader(average = state.averageDisplay, unit = state.selectedUnit)
-            Text(
-                text = stringResource(id = R.string.add_measurement),
-                style = MaterialTheme.typography.bodyLarge
-            )
-            UnitSelector(
-                selected = state.selectedUnit,
-                onUnitSelected = { onEvent(LogbookUiEvent.ChangeUnit(it)) })
-            BgInputRow(
-                value = state.inputValue,
-                unitLabel = state.selectedUnit.label(),
-                error = state.inputError,
-                onValueChange = { onEvent(LogbookUiEvent.UpdateInputValue(input = it)) },
-                onSave = { onEvent(LogbookUiEvent.SaveReading) }
-            )
-            EntryList(entries = state.entries, unit = state.selectedUnit)
-        }
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        AverageHeader(average = state.averageDisplay, unit = state.selectedUnit)
+        Text(
+            text = stringResource(id = R.string.add_measurement),
+            style = MaterialTheme.typography.bodyLarge,
+        )
+        UnitSelector(
+            selected = state.selectedUnit,
+            onUnitSelected = { onEvent(LogbookUiEvent.ChangeUnit(it)) },
+        )
+        BgInputRow(
+            value = state.inputValue,
+            unitLabel = state.selectedUnit.label(),
+            error = state.inputError,
+            onValueChange = { onEvent(LogbookUiEvent.UpdateInputValue(input = it)) },
+            onSave = { onEvent(LogbookUiEvent.SaveReading) },
+        )
+        EntryList(entries = state.entries, unit = state.selectedUnit)
     }
+}
 
 @Preview(showBackground = true, name = "mmol/L with readings")
 @Composable
-private fun LogbookPreviewMmol() = MiniLogbookTheme {
-    LogbookContent(
-        state = LogbookUiState(
-            selectedUnit = BgUnit.MMOL,
-            inputValue = "5.5",
-            averageDisplay = "5.50",
-            entries = previewEntriesList(),
-        ),
-        onEvent = {}
-    )
-}
+private fun LogbookPreviewMmol() =
+    MiniLogbookTheme {
+        LogbookContent(
+            state =
+                LogbookUiState(
+                    selectedUnit = BgUnit.MMOL,
+                    inputValue = "5.5",
+                    averageDisplay = "5.50",
+                    entries = previewEntriesList(),
+                ),
+            onEvent = {},
+        )
+    }
 
 @Preview(showBackground = true, name = "mg/dL with readings")
 @Composable
-private fun LogbookPreviewMgDl() = MiniLogbookTheme {
-    LogbookContent(
-        state = LogbookUiState(
-            selectedUnit = BgUnit.MGDL,
-            inputValue = "99.10",
-            averageDisplay = "122.00",
-            entries = previewEntriesList(),
-        ),
-        onEvent = {}
-    )
-}
-
+private fun LogbookPreviewMgDl() =
+    MiniLogbookTheme {
+        LogbookContent(
+            state =
+                LogbookUiState(
+                    selectedUnit = BgUnit.MGDL,
+                    inputValue = "99.10",
+                    averageDisplay = "122.00",
+                    entries = previewEntriesList(),
+                ),
+            onEvent = {},
+        )
+    }
 
 @Preview(showBackground = true, name = "Input Error")
 @Composable
-private fun LogbookPreviewError() = MiniLogbookTheme {
-    LogbookContent(
-        state = LogbookUiState(
-            selectedUnit = BgUnit.MMOL,
-            inputValue = "-3",
-            inputError = "Must be >= 0",
-            averageDisplay = "_",
-            entries = emptyList(),
-        ),
-        onEvent = {}
-    )
-}
-
+private fun LogbookPreviewError() =
+    MiniLogbookTheme {
+        LogbookContent(
+            state =
+                LogbookUiState(
+                    selectedUnit = BgUnit.MMOL,
+                    inputValue = "-3",
+                    inputError = "Must be >= 0",
+                    averageDisplay = "_",
+                    entries = emptyList(),
+                ),
+            onEvent = {},
+        )
+    }
 
 @Preview(showBackground = true, name = "Empty State")
 @Composable
-private fun LogbookPreviewEmpty() = MiniLogbookTheme {
-    LogbookContent(
-        state = LogbookUiState(),
-        onEvent = {}
-    )
-}
+private fun LogbookPreviewEmpty() =
+    MiniLogbookTheme {
+        LogbookContent(
+            state = LogbookUiState(),
+            onEvent = {},
+        )
+    }

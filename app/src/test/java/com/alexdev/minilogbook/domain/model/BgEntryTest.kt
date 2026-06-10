@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class BgEntryTest {
-
     @Test
     fun `given value only when BgEntry is created then id defaults to zero`() {
         val valueInMmol = 5.5
@@ -26,11 +25,12 @@ class BgEntryTest {
         val id = 9L
         val valueInMmol = 6.7
         val timestamp = 1_717_000_000_000L
-        val entry = BgEntry(
-            id = id,
-            valueInMmol = valueInMmol,
-            timestamp = timestamp
-        )
+        val entry =
+            BgEntry(
+                id = id,
+                valueInMmol = valueInMmol,
+                timestamp = timestamp,
+            )
         assertEquals(id, entry.id)
         assertEquals(valueInMmol, entry.valueInMmol)
         assertEquals(timestamp, entry.timestamp)

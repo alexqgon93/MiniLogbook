@@ -9,11 +9,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class BgRepositoryImpl @Inject constructor(private val db: BgEntryDao) : BgRepository {
+class BgRepositoryImpl
+    @Inject
+    constructor(
+        private val db: BgEntryDao,
+    ) : BgRepository {
+        override suspend fun addBgEntry(entry: BgEntry) = db.insertBgEntry(entry = entry.toEntry())
 
-    override suspend fun addBgEntry(entry: BgEntry) = db.insertBgEntry(entry = entry.toEntry())
-
-    override fun getBgEntries(): Flow<List<BgEntry>> = db.getBgEntries().map { entries ->
-        entries.map { it.toDomainModel() }
+        override fun getBgEntries(): Flow<List<BgEntry>> =
+            db.getBgEntries().map { entries ->
+                entries.map { it.toDomainModel() }
+            }
     }
-}

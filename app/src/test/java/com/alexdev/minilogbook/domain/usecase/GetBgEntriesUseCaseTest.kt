@@ -17,10 +17,11 @@ class GetBgEntriesUseCaseTest {
     @Test
     fun `GIVEN repository entries flow WHEN invoke is called THEN returns same emitted entries`() =
         runTest {
-            val entries = listOf(
-                BgEntry(id = 1L, valueInMmol = 5.5, timestamp = 1000L),
-                BgEntry(id = 2L, valueInMmol = 7.1, timestamp = 2000L)
-            )
+            val entries =
+                listOf(
+                    BgEntry(id = 1L, valueInMmol = 5.5, timestamp = 1000L),
+                    BgEntry(id = 2L, valueInMmol = 7.1, timestamp = 2000L),
+                )
             every { repository.getBgEntries() } returns flowOf(entries)
             val emitted = useCase().first()
             assertEquals(entries, emitted)

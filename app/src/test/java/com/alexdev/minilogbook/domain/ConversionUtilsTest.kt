@@ -6,7 +6,6 @@ import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class ConversionUtilsTest {
-
     @Test
     fun `GIVEN mmol value WHEN toMgdl is called THEN multiplies by conversion factor`() {
         5.0.toMgdl() shouldBe (90.091 plusOrMinus 1e-6)

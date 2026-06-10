@@ -18,12 +18,15 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideAppDatabase(@ApplicationContext context: Context): AppDataBase =
-        Room.databaseBuilder(
-            context = context,
-            klass = AppDataBase::class.java,
-            name = DATABASE_NAME
-        ).build()
+    fun provideAppDatabase(
+        @ApplicationContext context: Context,
+    ): AppDataBase =
+        Room
+            .databaseBuilder(
+                context = context,
+                klass = AppDataBase::class.java,
+                name = DATABASE_NAME,
+            ).build()
 
     @Provides
     fun providesFlightDao(appDatabase: AppDataBase): BgEntryDao = appDatabase.bgEntryDao()

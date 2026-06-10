@@ -27,7 +27,7 @@ fun BgValueTextField(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth(),
     ) {
         OutlinedTextField(
             value = value,
@@ -35,7 +35,7 @@ fun BgValueTextField(
             isError = isError,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             singleLine = true,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
         Text(
             text = unitLabel,
@@ -47,33 +47,36 @@ fun BgValueTextField(
 
 @Preview(showBackground = true, name = "Idle")
 @Composable
-private fun BgValueTextFieldPreviewIdle() = MiniLogbookTheme {
-    BgValueTextField(
-        value = "5.5",
-        unitLabel = stringResource(id = R.string.mmol_l),
-        isError = false,
-        onValueChange = {}
-    )
-}
+private fun BgValueTextFieldPreviewIdle() =
+    MiniLogbookTheme {
+        BgValueTextField(
+            value = "5.5",
+            unitLabel = stringResource(id = R.string.mmol_l),
+            isError = false,
+            onValueChange = {},
+        )
+    }
 
 @Preview(showBackground = true, name = "Error state")
 @Composable
-private fun BgValueTextFieldPreviewError() = MiniLogbookTheme {
-    BgValueTextField(
-        value = "-3",
-        unitLabel = stringResource(id = R.string.mmol_l),
-        isError = true,
-        onValueChange = {}
-    )
-}
+private fun BgValueTextFieldPreviewError() =
+    MiniLogbookTheme {
+        BgValueTextField(
+            value = "-3",
+            unitLabel = stringResource(id = R.string.mmol_l),
+            isError = true,
+            onValueChange = {},
+        )
+    }
 
 @Preview(showBackground = true, name = "mg/dL label")
 @Composable
-private fun BgValueTextFieldPreviewMgDl() = MiniLogbookTheme {
-    BgValueTextField(
-        value = "99.10",
-        unitLabel = stringResource(id = R.string.mmg_dl),
-        isError = false,
-        onValueChange = {}
-    )
-}
+private fun BgValueTextFieldPreviewMgDl() =
+    MiniLogbookTheme {
+        BgValueTextField(
+            value = "99.10",
+            unitLabel = stringResource(id = R.string.mmg_dl),
+            isError = false,
+            onValueChange = {},
+        )
+    }

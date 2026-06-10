@@ -16,7 +16,8 @@ fun InputErrorText(
     modifier: Modifier = Modifier,
 ) {
     AnimatedVisibility(
-        visible = error != null, modifier = modifier
+        visible = error != null,
+        modifier = modifier,
     ) {
         Text(
             text = error.orEmpty(),
@@ -29,5 +30,4 @@ fun InputErrorText(
 
 @Preview(showBackground = true, name = "Error visible")
 @Composable
-private fun InputErrorTextPreviewVisible() =
-    MiniLogbookTheme { InputErrorText(error = "Must be >= 0") }
+private fun InputErrorTextPreviewVisible() = MiniLogbookTheme { InputErrorText(error = "Must be >= 0") }

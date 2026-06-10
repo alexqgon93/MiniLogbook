@@ -8,5 +8,5 @@ data class LogbookUiState(
     val inputValue: String = "",
     val entries: List<BgEntry> = emptyList(),
     val averageDisplay: String = "—",
-    val inputError: String? = null
+    val inputError: String? = null,
 )

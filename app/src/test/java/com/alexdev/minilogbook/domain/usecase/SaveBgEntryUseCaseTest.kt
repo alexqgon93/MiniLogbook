@@ -13,10 +13,11 @@ class SaveBgEntryUseCaseTest {
     private val useCase = SaveBgEntryUseCase(repository = repository)
 
     @Test
-    fun `GIVEN bg entry WHEN invoke is called THEN delegates to repository addBgEntry`() = runTest {
-        val entry = BgEntry(id = 1, valueInMmol = 6.8, timestamp = 1_717_000_000_000L)
-        coEvery { repository.addBgEntry(entry) } returns Unit
-        useCase(entry)
-        coVerify(exactly = 1) { repository.addBgEntry(entry) }
-    }
+    fun `GIVEN bg entry WHEN invoke is called THEN delegates to repository addBgEntry`() =
+        runTest {
+            val entry = BgEntry(id = 1, valueInMmol = 6.8, timestamp = 1_717_000_000_000L)
+            coEvery { repository.addBgEntry(entry) } returns Unit
+            useCase(entry)
+            coVerify(exactly = 1) { repository.addBgEntry(entry) }
+        }
 }

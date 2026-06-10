@@ -19,11 +19,12 @@ class BgRepositoryImplTest {
     @Test
     fun `given domain entry when addBgEntry is called then dao insert is called with mapped entity`() =
         runTest {
-            val entry = BgEntry(
-                id = 11L,
-                valueInMmol = 6.4,
-                timestamp = 1_717_000_000_000L
-            )
+            val entry =
+                BgEntry(
+                    id = 11L,
+                    valueInMmol = 6.4,
+                    timestamp = 1_717_000_000_000L,
+                )
             repository.addBgEntry(entry)
             coVerify(exactly = 1) {
                 dao.insertBgEntry(
@@ -31,7 +32,7 @@ class BgRepositoryImplTest {
                         assertEquals(entry.id, entity.id)
                         assertEquals(entry.valueInMmol, entity.valueInMmol)
                         assertEquals(entry.timestamp, entity.timestamp)
-                    }
+                    },
                 )
             }
         }
@@ -39,10 +40,11 @@ class BgRepositoryImplTest {
     @Test
     fun `given dao entities flow when getBgEntries is collected then returns mapped domain list`() =
         runTest {
-            val daoEntries = listOf(
-                BgEntryEntity(id = 1, valueInMmol = 5.5, timestamp = 1000L),
-                BgEntryEntity(id = 2, valueInMmol = 7.2, timestamp = 2000L)
-            )
+            val daoEntries =
+                listOf(
+                    BgEntryEntity(id = 1, valueInMmol = 5.5, timestamp = 1000L),
+                    BgEntryEntity(id = 2, valueInMmol = 7.2, timestamp = 2000L),
+                )
             every { dao.getBgEntries() } returns flowOf(daoEntries)
             val result = repository.getBgEntries()
             val emitted = mutableListOf<List<BgEntry>>()

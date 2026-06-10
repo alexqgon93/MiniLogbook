@@ -8,24 +8,29 @@ import com.alexdev.minilogbook.presentation.components.atoms.UnitRadioButton
 import com.alexdev.minilogbook.ui.theme.MiniLogbookTheme
 
 @Composable
-fun UnitSelector(selected: BgUnit, onUnitSelected: (BgUnit) -> Unit) = Column {
+fun UnitSelector(
+    selected: BgUnit,
+    onUnitSelected: (BgUnit) -> Unit,
+) = Column {
     BgUnit.entries.forEach { unit ->
         UnitRadioButton(
             unit = unit,
             selected = selected == unit,
-            onSelected = { onUnitSelected(unit) }
+            onSelected = { onUnitSelected(unit) },
         )
     }
 }
 
 @Preview(showBackground = true, name = "mmol/L selected")
 @Composable
-fun UnitSelectorPreviewMmol() = MiniLogbookTheme {
-    UnitSelector(selected = BgUnit.MMOL, onUnitSelected = {})
-}
+fun UnitSelectorPreviewMmol() =
+    MiniLogbookTheme {
+        UnitSelector(selected = BgUnit.MMOL, onUnitSelected = {})
+    }
 
 @Preview(showBackground = true, name = "mg/dL selected")
 @Composable
-fun UnitSelectorPreviewMgDl() = MiniLogbookTheme {
-    UnitSelector(selected = BgUnit.MGDL, onUnitSelected = {})
-}
+fun UnitSelectorPreviewMgDl() =
+    MiniLogbookTheme {
+        UnitSelector(selected = BgUnit.MGDL, onUnitSelected = {})
+    }
