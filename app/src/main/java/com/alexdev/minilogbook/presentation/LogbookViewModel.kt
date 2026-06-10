@@ -2,9 +2,15 @@ package com.alexdev.minilogbook.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alexdev.minilogbook.domain.BG_MAX_MG_DL
+import com.alexdev.minilogbook.domain.BG_MAX_MMOL
+import com.alexdev.minilogbook.domain.BG_MIN_MG_DL
+import com.alexdev.minilogbook.domain.BG_MIN_MMOL
 import com.alexdev.minilogbook.domain.convertTo
+import com.alexdev.minilogbook.domain.getBgRangeLimits
 import com.alexdev.minilogbook.domain.model.BgEntry
 import com.alexdev.minilogbook.domain.model.BgUnit
+import com.alexdev.minilogbook.domain.model.label
 import com.alexdev.minilogbook.domain.usecase.GetBgEntriesUseCase
 import com.alexdev.minilogbook.domain.usecase.SaveBgEntryUseCase
 import com.alexdev.minilogbook.presentation.LogbookUiEvent.UpdateInputValue
@@ -31,7 +37,12 @@ class LogbookViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             getBgEntriesUseCase().collect { entries ->
-                _uiState.update { it.copy(entries = entries) }
+                _uiState.update {
+                    it.copy(
+                        entries = entries,
+                        averageDisplay = computeAverage(entries = entries, unit = BgUnit.MMOL)
+                    )
+                }
             }
         }
     }
@@ -43,10 +54,18 @@ class LogbookViewModel @Inject constructor(
     }
 
     fun handleInputChange(input: String) {
-        val error =
-            if (input.isNotEmpty() && input.toDoubleOrNull() == null) "Invalid number" else null
-        val valueError = input.toDoubleOrNull()?.let { if (it < 0) "Must be >= 0" else null }
-        _uiState.update { it.copy(inputValue = input, inputError = error ?: valueError) }
+        val parsed = input.toDoubleOrNull()
+        val unit = _uiState.value.selectedUnit
+        val (min, max) = getBgRangeLimits(unit)
+
+        val error = when {
+            input.isEmpty() -> null
+            parsed == null -> "Invalid number"
+            parsed < min -> "Must be >= ${"%.1f".format(min)} ${unit.label()}"
+            parsed > max -> "Must be <= ${"%.1f".format(max)} ${unit.label()}"
+            else -> null
+        }
+        _uiState.update { it.copy(inputValue = input, inputError = error) }
     }
 
     fun handleUnitChange(newUnit: BgUnit) {
@@ -60,6 +79,7 @@ class LogbookViewModel @Inject constructor(
                 averageDisplay = computeAverage(state.entries, newUnit)
             )
         }
+        handleInputChange(_uiState.value.inputValue)
     }
 
     fun handleSave() {
@@ -86,15 +106,6 @@ class LogbookViewModel @Inject constructor(
             _uiState.update { it.copy(inputValue = "", inputError = null) }
         }
     }
-
-    /*fun handleSave() {
-        val value = _uiState.value.inputValue.toDoubleOrNull()?.takeIf { it >= 0 } ?: return
-        val valueMmol = value.convertTo(from = _uiState.value.selectedUnit, to = BgUnit.MMOL)
-        viewModelScope.launch {
-            saveBgEntryUseCase(entry = BgEntry(valueInMmol = valueMmol))
-            _uiState.update { it.copy(inputValue = "", inputError = null) }
-        }
-    }*/
 
     private fun computeAverage(entries: List<BgEntry>, unit: BgUnit): String {
         if (entries.isEmpty()) return "-"

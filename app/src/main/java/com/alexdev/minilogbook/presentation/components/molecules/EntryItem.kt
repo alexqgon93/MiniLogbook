@@ -33,8 +33,8 @@ fun EntryItem(entry: BgEntry, unit: BgUnit) {
             .padding(vertical = 4.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        Text(text = formattedTime, style = MaterialTheme.typography.bodySmall)
-        Text(text = "$displayValue ${unit.label()}", style = MaterialTheme.typography.bodySmall)
+        Text(text = formattedTime, style = MaterialTheme.typography.bodyMedium)
+        Text(text = "$displayValue ${unit.label()}", style = MaterialTheme.typography.bodyMedium)
     }
 }
 
