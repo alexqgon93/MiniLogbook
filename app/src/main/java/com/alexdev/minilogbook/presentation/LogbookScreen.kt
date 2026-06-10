@@ -13,16 +13,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alexdev.minilogbook.R
-import com.alexdev.minilogbook.domain.model.BgEntry
 import com.alexdev.minilogbook.domain.model.BgUnit
 import com.alexdev.minilogbook.domain.model.label
 import com.alexdev.minilogbook.presentation.components.organisms.AverageHeader
 import com.alexdev.minilogbook.presentation.components.organisms.BgInputRow
 import com.alexdev.minilogbook.presentation.components.organisms.EntryList
 import com.alexdev.minilogbook.presentation.components.molecules.UnitSelector
+import com.alexdev.minilogbook.presentation.preview.previewEntriesList
 import com.alexdev.minilogbook.ui.theme.MiniLogbookTheme
 
 @Composable
@@ -36,7 +36,7 @@ fun LogbookScreen(viewModel: LogbookViewModel = hiltViewModel()) {
 }
 
 @Composable
-fun LogbookContent(state: LogbookUiState, onEvent: (LogbookUiEvent) -> Unit) =
+internal fun LogbookContent(state: LogbookUiState, onEvent: (LogbookUiEvent) -> Unit) =
     Scaffold { paddingValues ->
         Column(
             modifier = Modifier
@@ -63,12 +63,6 @@ fun LogbookContent(state: LogbookUiState, onEvent: (LogbookUiEvent) -> Unit) =
             EntryList(entries = state.entries, unit = state.selectedUnit)
         }
     }
-
-private fun previewEntriesList() = listOf(
-    BgEntry(id = 1, valueInMmol = 5.5, timestamp = System.currentTimeMillis() - 3_600_000),
-    BgEntry(id = 2, valueInMmol = 6.2, timestamp = System.currentTimeMillis() - 7_200_000),
-    BgEntry(id = 3, valueInMmol = 4.8, timestamp = System.currentTimeMillis() - 10_800_000),
-)
 
 @Preview(showBackground = true, name = "mmol/L with readings")
 @Composable
@@ -115,7 +109,7 @@ private fun LogbookPreviewError() = MiniLogbookTheme {
 }
 
 
-@Preview(showBackground = true, name = "mmol/L with readings")
+@Preview(showBackground = true, name = "Empty State")
 @Composable
 private fun LogbookPreviewEmpty() = MiniLogbookTheme {
     LogbookContent(
