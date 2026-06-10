@@ -2,10 +2,6 @@ package com.alexdev.minilogbook.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alexdev.minilogbook.domain.BG_MAX_MG_DL
-import com.alexdev.minilogbook.domain.BG_MAX_MMOL
-import com.alexdev.minilogbook.domain.BG_MIN_MG_DL
-import com.alexdev.minilogbook.domain.BG_MIN_MMOL
 import com.alexdev.minilogbook.domain.convertTo
 import com.alexdev.minilogbook.domain.getBgRangeLimits
 import com.alexdev.minilogbook.domain.model.BgEntry
