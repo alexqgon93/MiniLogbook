@@ -19,7 +19,7 @@ class AverageHeaderTest {
     fun averageHeader_renders_average_with_mmol_unit() {
         composeTestRule.setContent {
             MiniLogbookTheme {
-                AverageHeader(average = "5.50", unit = BgUnit.MMOL)
+                AverageHeader(averageDisplay = "5.50", averageMmol = 5.50, unit = BgUnit.MMOL)
             }
         }
 
@@ -30,7 +30,7 @@ class AverageHeaderTest {
     fun averageHeader_renders_average_with_mgdl_unit() {
         composeTestRule.setContent {
             MiniLogbookTheme {
-                AverageHeader(average = "122.00", unit = BgUnit.MGDL)
+                AverageHeader(averageDisplay = "99.10", averageMmol = 6.77, unit = BgUnit.MGDL)
             }
         }
 
@@ -41,7 +41,7 @@ class AverageHeaderTest {
     fun averageHeader_renders_em_dash_when_no_entries() {
         composeTestRule.setContent {
             MiniLogbookTheme {
-                AverageHeader(average = "—", unit = BgUnit.MMOL)
+                AverageHeader(averageDisplay = "--", averageMmol = null, unit = BgUnit.MMOL)
             }
         }
 
