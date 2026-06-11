@@ -13,23 +13,29 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInfo
 
 class EntryItemSnapshotTest {
-
     private lateinit var paparazzi: Paparazzi
 
     @BeforeEach
     fun setup(testInfo: TestInfo) {
-        paparazzi = Paparazzi(
-            deviceConfig = DeviceConfig.PIXEL_6,
-            theme = "Theme.MiniLogbook"
-        ).apply {
-            setup(
-                testName = TestName(
-                    packageName = testInfo.testClass.get().`package`?.name.orEmpty(),
-                    className = testInfo.testClass.get().simpleName,
-                    methodName = testInfo.testMethod.get().name
+        paparazzi =
+            Paparazzi(
+                deviceConfig = DeviceConfig.PIXEL_6,
+                theme = "Theme.MiniLogbook",
+            ).apply {
+                setup(
+                    testName =
+                        TestName(
+                            packageName =
+                                testInfo.testClass
+                                    .get()
+                                    .`package`
+                                    ?.name
+                                    .orEmpty(),
+                            className = testInfo.testClass.get().simpleName,
+                            methodName = testInfo.testMethod.get().name,
+                        ),
                 )
-            )
-        }
+            }
     }
 
     @AfterEach
@@ -43,7 +49,7 @@ class EntryItemSnapshotTest {
             MiniLogbookTheme {
                 EntryItem(
                     entry = BgEntry(id = 1, valueInMmol = 5.5, timestamp = 0L),
-                    unit = BgUnit.MMOL
+                    unit = BgUnit.MMOL,
                 )
             }
         }
@@ -55,7 +61,7 @@ class EntryItemSnapshotTest {
             MiniLogbookTheme {
                 EntryItem(
                     entry = BgEntry(id = 1, valueInMmol = 5.5, timestamp = 0L),
-                    unit = BgUnit.MGDL
+                    unit = BgUnit.MGDL,
                 )
             }
         }

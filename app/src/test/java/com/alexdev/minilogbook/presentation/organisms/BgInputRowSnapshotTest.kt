@@ -11,23 +11,29 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInfo
 
 class BgInputRowSnapshotTest {
-
     private lateinit var paparazzi: Paparazzi
 
     @BeforeEach
     fun setup(testInfo: TestInfo) {
-        paparazzi = Paparazzi(
-            deviceConfig = DeviceConfig.PIXEL_6,
-            theme = "Theme.MiniLogbook"
-        ).apply {
-            setup(
-                testName = TestName(
-                    packageName = testInfo.testClass.get().`package`?.name.orEmpty(),
-                    className = testInfo.testClass.get().simpleName,
-                    methodName = testInfo.testMethod.get().name
+        paparazzi =
+            Paparazzi(
+                deviceConfig = DeviceConfig.PIXEL_6,
+                theme = "Theme.MiniLogbook",
+            ).apply {
+                setup(
+                    testName =
+                        TestName(
+                            packageName =
+                                testInfo.testClass
+                                    .get()
+                                    .`package`
+                                    ?.name
+                                    .orEmpty(),
+                            className = testInfo.testClass.get().simpleName,
+                            methodName = testInfo.testMethod.get().name,
+                        ),
                 )
-            )
-        }
+            }
     }
 
     @AfterEach
@@ -44,7 +50,7 @@ class BgInputRowSnapshotTest {
                     unitLabel = "mmol/L",
                     error = null,
                     onValueChange = {},
-                    onSave = {}
+                    onSave = {},
                 )
             }
         }
@@ -59,7 +65,7 @@ class BgInputRowSnapshotTest {
                     unitLabel = "mmol/L",
                     error = null,
                     onValueChange = {},
-                    onSave = {}
+                    onSave = {},
                 )
             }
         }
@@ -74,7 +80,7 @@ class BgInputRowSnapshotTest {
                     unitLabel = "mmol/L",
                     error = "Must be >= 2.8 mmol/L",
                     onValueChange = {},
-                    onSave = {}
+                    onSave = {},
                 )
             }
         }
@@ -89,7 +95,7 @@ class BgInputRowSnapshotTest {
                     unitLabel = "mmol/L",
                     error = "Must be <= 33.3 mmol/L",
                     onValueChange = {},
-                    onSave = {}
+                    onSave = {},
                 )
             }
         }
@@ -104,7 +110,7 @@ class BgInputRowSnapshotTest {
                     unitLabel = "mg/dL",
                     error = null,
                     onValueChange = {},
-                    onSave = {}
+                    onSave = {},
                 )
             }
         }

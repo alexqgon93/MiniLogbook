@@ -1,7 +1,7 @@
 package com.alexdev.minilogbook.presentation
 
-import app.cash.paparazzi.Paparazzi
 import app.cash.paparazzi.DeviceConfig
+import app.cash.paparazzi.Paparazzi
 import app.cash.paparazzi.TestName
 import com.alexdev.minilogbook.domain.model.BgEntry
 import com.alexdev.minilogbook.domain.model.BgUnit
@@ -12,23 +12,29 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInfo
 
 class LogbookSnapshotTest {
-
     private lateinit var paparazzi: Paparazzi
 
     @BeforeEach
     fun setup(testInfo: TestInfo) {
-        paparazzi = Paparazzi(
-            deviceConfig = DeviceConfig.PIXEL_6,
-            theme = "Theme.MiniLogbook"
-        ).apply {
-            setup(
-                testName = TestName(
-                    packageName = testInfo.testClass.get().`package`?.name.orEmpty(),
-                    className = testInfo.testClass.get().simpleName,
-                    methodName = testInfo.testMethod.get().name
+        paparazzi =
+            Paparazzi(
+                deviceConfig = DeviceConfig.PIXEL_6,
+                theme = "Theme.MiniLogbook",
+            ).apply {
+                setup(
+                    testName =
+                        TestName(
+                            packageName =
+                                testInfo.testClass
+                                    .get()
+                                    .`package`
+                                    ?.name
+                                    .orEmpty(),
+                            className = testInfo.testClass.get().simpleName,
+                            methodName = testInfo.testMethod.get().name,
+                        ),
                 )
-            )
-        }
+            }
     }
 
     @AfterEach
@@ -36,11 +42,12 @@ class LogbookSnapshotTest {
         paparazzi.teardown()
     }
 
-    private fun previewEntries() = listOf(
-        BgEntry(id = 1, valueInMmol = 5.5, timestamp = 0L),
-        BgEntry(id = 2, valueInMmol = 6.2, timestamp = 0L),
-        BgEntry(id = 3, valueInMmol = 4.8, timestamp = 0L),
-    )
+    private fun previewEntries() =
+        listOf(
+            BgEntry(id = 1, valueInMmol = 5.5, timestamp = 0L),
+            BgEntry(id = 2, valueInMmol = 6.2, timestamp = 0L),
+            BgEntry(id = 3, valueInMmol = 4.8, timestamp = 0L),
+        )
 
     @Test
     fun logbook_emptyState() {
@@ -56,13 +63,14 @@ class LogbookSnapshotTest {
         paparazzi.snapshot {
             MiniLogbookTheme {
                 LogbookContent(
-                    state = LogbookUiState(
-                        selectedUnit = BgUnit.MMOL,
-                        inputValue = "5.5",
-                        averageDisplay = "5.50",
-                        entries = previewEntries()
-                    ),
-                    onEvent = {}
+                    state =
+                        LogbookUiState(
+                            selectedUnit = BgUnit.MMOL,
+                            inputValue = "5.5",
+                            averageDisplay = "5.50",
+                            entries = previewEntries(),
+                        ),
+                    onEvent = {},
                 )
             }
         }
@@ -73,13 +81,14 @@ class LogbookSnapshotTest {
         paparazzi.snapshot {
             MiniLogbookTheme {
                 LogbookContent(
-                    state = LogbookUiState(
-                        selectedUnit = BgUnit.MGDL,
-                        inputValue = "99.10",
-                        averageDisplay = "122.00",
-                        entries = previewEntries()
-                    ),
-                    onEvent = {}
+                    state =
+                        LogbookUiState(
+                            selectedUnit = BgUnit.MGDL,
+                            inputValue = "99.10",
+                            averageDisplay = "122.00",
+                            entries = previewEntries(),
+                        ),
+                    onEvent = {},
                 )
             }
         }
@@ -90,11 +99,12 @@ class LogbookSnapshotTest {
         paparazzi.snapshot {
             MiniLogbookTheme {
                 LogbookContent(
-                    state = LogbookUiState(
-                        inputValue = "-1",
-                        inputError = "Must be >= 2.8 mmol/L"
-                    ),
-                    onEvent = {}
+                    state =
+                        LogbookUiState(
+                            inputValue = "-1",
+                            inputError = "Must be >= 2.8 mmol/L",
+                        ),
+                    onEvent = {},
                 )
             }
         }
