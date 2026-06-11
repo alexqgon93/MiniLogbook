@@ -1,10 +1,10 @@
 package com.alexdev.minilogbook.presentation.components.molecules
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -39,15 +39,12 @@ fun EntryItem(
         entry.valueInMmol.convertTo(from = BgUnit.MMOL, to = unit).let { "%.2f".format(it) }
     val formattedTime =
         remember(key1 = entry.timestamp) {
-            SimpleDateFormat("dd MMM, HH:mm", Locale.getDefault()).format(Date(entry.timestamp))
+            SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(entry.timestamp))
         }
     val status = entry.valueInMmol.toBgStatus()
 
     Card(
-        modifier =
-            modifier
-                .fillMaxWidth()
-                .animateContentSize(),
+        modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(size = 12.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
@@ -65,6 +62,7 @@ fun EntryItem(
                 text = formattedTime,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.width(40.dp),
             )
             Row(
                 verticalAlignment = Alignment.Bottom,

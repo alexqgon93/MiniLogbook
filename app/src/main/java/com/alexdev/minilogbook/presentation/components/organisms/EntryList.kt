@@ -1,6 +1,7 @@
 package com.alexdev.minilogbook.presentation.components.organisms
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -40,7 +41,11 @@ fun EntryList(
                     SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(entry.timestamp)
                 }.toSortedMap(reverseOrder())
         }
-    LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
+    LazyColumn(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(vertical = 4.dp),
+    ) {
         grouped.forEach { (dateKey, entries) ->
             item(key = dateKey) {
                 EntriesDateHeader(modifier = Modifier.padding(top = 16.dp, bottom = 8.dp), dateKey = dateKey)

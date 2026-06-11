@@ -1,5 +1,6 @@
 package com.alexdev.minilogbook.presentation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -43,28 +45,42 @@ internal fun LogbookContent(
     Column(
         modifier =
             Modifier
-                .padding(paddingValues)
                 .fillMaxSize()
+                .background(color = MaterialTheme.colorScheme.background)
+                .padding(paddingValues)
                 .padding(horizontal = 16.dp, vertical = 24.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(24.dp),
     ) {
-        AverageHeader(average = state.averageDisplay, unit = state.selectedUnit)
-        Text(
-            text = stringResource(id = R.string.add_measurement),
-            style = MaterialTheme.typography.bodyLarge,
-        )
-        UnitSelector(
-            selected = state.selectedUnit,
-            onUnitSelected = { onEvent(LogbookUiEvent.ChangeUnit(it)) },
-        )
-        BgInputRow(
-            value = state.inputValue,
-            unitLabel = state.selectedUnit.label(),
-            error = state.inputError,
-            onValueChange = { onEvent(LogbookUiEvent.UpdateInputValue(input = it)) },
-            onSave = { onEvent(LogbookUiEvent.SaveReading) },
-        )
-        EntryList(entries = state.entries, unit = state.selectedUnit)
+        AverageHeader(averageDisplay = state.averageDisplay, averageMmol = state.averageMmol, unit = state.selectedUnit)
+        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Text(
+                text = stringResource(id = R.string.add_measurement),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold,
+            )
+            Text(
+                text = "Unit of measure",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            UnitSelector(
+                selected = state.selectedUnit,
+                onUnitSelected = { onEvent(LogbookUiEvent.ChangeUnit(it)) },
+            )
+            Text(
+                text = "Glucose value",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            BgInputRow(
+                value = state.inputValue,
+                unitLabel = state.selectedUnit.label(),
+                error = state.inputError,
+                onValueChange = { onEvent(LogbookUiEvent.UpdateInputValue(input = it)) },
+                onSave = { onEvent(LogbookUiEvent.SaveReading) },
+            )
+        }
+        EntryList(modifier = Modifier.weight(1f), entries = state.entries, unit = state.selectedUnit)
     }
 }
 

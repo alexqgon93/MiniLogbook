@@ -34,10 +34,12 @@ class LogbookViewModel
         init {
             viewModelScope.launch {
                 getBgEntriesUseCase().collect { entries ->
+                    val (displayAvg, avgMmol) = computeAverage(entries, _uiState.value.selectedUnit)
                     _uiState.update {
                         it.copy(
                             entries = entries,
-                            averageDisplay = formatAverage(entries = entries, unit = it.selectedUnit),
+                            averageDisplay = displayAvg,
+                            averageMmol = avgMmol,
                         )
                     }
                 }
@@ -66,6 +68,7 @@ class LogbookViewModel
         }
 
         private fun handleUnitChange(newUnit: BgUnit) {
+            val (display, avgMmol) = computeAverage(_uiState.value.entries, newUnit)
             _uiState.update { state ->
                 state.copy(
                     selectedUnit = newUnit,
@@ -75,7 +78,8 @@ class LogbookViewModel
                             ?.convertTo(from = state.selectedUnit, to = newUnit)
                             ?.let { bgValueFormatter.format(value = it) }
                             ?: state.inputValue,
-                    averageDisplay = formatAverage(entries = state.entries, unit = newUnit),
+                    averageDisplay = display,
+                    averageMmol = avgMmol,
                 )
             }
             handleInputChange(input = _uiState.value.inputValue)
@@ -128,17 +132,30 @@ class LogbookViewModel
             unit: BgUnit,
         ) = "Must be <= ${bgValueFormatter.formatWithUnit(value = max, unit = unit)}"
 
-        private fun computeAverageMmol(entries: List<BgEntry>): Double? =
-            if (entries.isEmpty()) null else entries.map { it.valueInMmol }.average()
-
-        private fun formatAverage(
-            entries: List<BgEntry>,
+        private fun computeAverage(
+            readings: List<BgEntry>,
             unit: BgUnit,
-        ): String =
-            computeAverageMmol(entries)
-                ?.convertTo(from = BgUnit.MMOL, to = unit)
-                ?.let { bgValueFormatter.format(value = it) }
-                ?: "-"
+        ): Pair<String, Double?> {
+            if (readings.isEmpty()) return "—" to null
+            val avgMmol = readings.map { it.valueInMmol }.average()
+            val display =
+                avgMmol
+                    .convertTo(from = BgUnit.MMOL, to = unit)
+                    .let { bgValueFormatter.format(value = it) }
+            return display to avgMmol
+        }
+
+    /*private fun computeAverageMmol(entries: List<BgEntry>): Double? =
+        if (entries.isEmpty()) null else entries.map { it.valueInMmol }.average()
+
+    private fun formatAverage(
+        entries: List<BgEntry>,
+        unit: BgUnit,
+    ): String =
+        computeAverageMmol(entries)
+            ?.convertTo(from = BgUnit.MMOL, to = unit)
+            ?.let { bgValueFormatter.format(value = it) }
+            ?: "-"*/
 
         companion object {
             private const val ERROR_REQUIRED = "Value is required"
