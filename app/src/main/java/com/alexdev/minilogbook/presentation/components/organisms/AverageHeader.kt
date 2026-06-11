@@ -1,90 +1,121 @@
 package com.alexdev.minilogbook.presentation.components.organisms
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.alexdev.minilogbook.R
 import com.alexdev.minilogbook.domain.model.BgUnit
 import com.alexdev.minilogbook.domain.model.label
+import com.alexdev.minilogbook.domain.model.toBgStatus
+import com.alexdev.minilogbook.presentation.components.atoms.BgStatusBadge
+import com.alexdev.minilogbook.ui.theme.Emerald50
+import com.alexdev.minilogbook.ui.theme.Emerald500
 import com.alexdev.minilogbook.ui.theme.MiniLogbookTheme
 
 @Composable
 fun AverageHeader(
-    average: String,
+    modifier: Modifier = Modifier,
+    averageDisplay: String,
+    averageMmol: Double?,
     unit: BgUnit,
 ) {
-    val (background, textColor) = getAverageStatusColors(average = average, unit = unit)
-    Column(
-        modifier =
-            Modifier
-                .fillMaxWidth()
-                .background(
-                    color = background,
-                    shape = RoundedCornerShape(size = 12.dp),
-                ).padding(all = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+    val status = averageMmol?.toBgStatus()
+
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(size = 16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Text(
-            text = stringResource(id = R.string.your_average_is, average, unit.label()),
-            style = MaterialTheme.typography.bodyLarge,
-            color = textColor,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(top = 4.dp),
-        )
-        HorizontalDivider(modifier = Modifier.padding(top = 8.dp))
-    }
-}
-
-private fun getAverageStatusColors(
-    average: String,
-    unit: BgUnit,
-): Pair<Color, Color> {
-    val value = average.toDoubleOrNull() ?: return Color(0xFFF5F5F5) to Color(0xFF757575)
-    val (lowerThreshold, normalMax, highMax) =
-        when (unit) {
-            BgUnit.MMOL -> Triple(4.0, 7.0, 11.0)
-            BgUnit.MGDL -> Triple(72.07, 126.13, 198.20)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(all = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(space = 12.dp)
+            ) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .size(48.dp)
+                        .background(color = Emerald50, shape = RoundedCornerShape(size = 12.dp))
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.TrendingUp,
+                        contentDescription = null,
+                        tint = Emerald500,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+                Column {
+                    Text(
+                        text = "Your average",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    Row(
+                        verticalAlignment = Alignment.Bottom,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Text(
+                            text = averageDisplay,
+                            style = MaterialTheme.typography.headlineMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface,
+                        )
+                        Text(
+                            text = unit.label(),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(bottom = 4.dp)
+                        )
+                    }
+                }
+            }
+            if (status != null) {
+                BgStatusBadge(status = status)
+            }
         }
-
-    return when {
-        average == "--" -> Color(0xFFF5F5F5) to Color(0xFF9E9E9E)
-        value < lowerThreshold -> Color(0xFFFFEBEE) to Color(0xFFC62828)
-        value <= normalMax -> Color(0xFFE8F5E9) to Color(0xFF2E7D32)
-        value <= highMax -> Color(0xFFFFF3E0) to Color(0xFFE65100)
-        else -> Color(0xFFFFEBEE) to Color(0xFF7F0000)
     }
 }
 
 @Preview(showBackground = true, name = "mmol/L")
 @Composable
-private fun AverageHeaderPreviewMmol() =
-    MiniLogbookTheme {
-        AverageHeader(average = "5.50", unit = BgUnit.MMOL)
-    }
+private fun AverageHeaderPreviewMmol() = MiniLogbookTheme {
+    AverageHeader(averageDisplay = "5.50", averageMmol = 5.50, unit = BgUnit.MMOL)
+}
 
 @Preview(showBackground = true, name = "mg/dL")
 @Composable
-private fun AverageHeaderPreviewMgDl() =
-    MiniLogbookTheme {
-        AverageHeader(average = "122.00", unit = BgUnit.MGDL)
-    }
+private fun AverageHeaderPreviewMgDl() = MiniLogbookTheme {
+    AverageHeader(averageDisplay = "99.10", averageMmol = 6.77, unit = BgUnit.MGDL)
+}
 
 @Preview(showBackground = true, name = "Empty state")
 @Composable
-private fun AverageHeaderPreviewEmpty() =
-    MiniLogbookTheme {
-        AverageHeader(average = "--", unit = BgUnit.MMOL)
-    }
+private fun AverageHeaderPreviewEmpty() = MiniLogbookTheme {
+    AverageHeader(averageDisplay = "--", averageMmol = null, unit = BgUnit.MMOL)
+}

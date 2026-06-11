@@ -46,7 +46,7 @@ class AverageHeaderSnapshotTest {
     fun averageHeader_emptyState() {
         paparazzi.snapshot {
             MiniLogbookTheme {
-                AverageHeader(average = "—", unit = BgUnit.MMOL)
+                AverageHeader(averageDisplay = "--", averageMmol = null, unit = BgUnit.MMOL)
             }
         }
     }
@@ -55,7 +55,7 @@ class AverageHeaderSnapshotTest {
     fun averageHeader_withValue_mmol() {
         paparazzi.snapshot {
             MiniLogbookTheme {
-                AverageHeader(average = "5.50", unit = BgUnit.MMOL)
+                AverageHeader(averageDisplay = "5.50", averageMmol = 5.50, unit = BgUnit.MMOL)
             }
         }
     }
@@ -64,7 +64,7 @@ class AverageHeaderSnapshotTest {
     fun averageHeader_withValue_mgdl() {
         paparazzi.snapshot {
             MiniLogbookTheme {
-                AverageHeader(average = "122.00", unit = BgUnit.MGDL)
+                AverageHeader(averageDisplay = "99.10", averageMmol = 6.77, unit = BgUnit.MGDL)
             }
         }
     }
