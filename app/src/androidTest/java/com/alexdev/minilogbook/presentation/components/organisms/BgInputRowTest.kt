@@ -32,7 +32,7 @@ class BgInputRowTest {
             }
         }
 
-        composeTestRule.onNodeWithText("Save").assertIsNotEnabled()
+        composeTestRule.onNodeWithText(SAVE_BUTTON_TEXT).assertIsNotEnabled()
     }
 
     @Test
@@ -49,7 +49,7 @@ class BgInputRowTest {
             }
         }
 
-        composeTestRule.onNodeWithText("Save").assertIsNotEnabled()
+        composeTestRule.onNodeWithText(SAVE_BUTTON_TEXT).assertIsNotEnabled()
     }
 
     @Test
@@ -66,7 +66,7 @@ class BgInputRowTest {
             }
         }
 
-        composeTestRule.onNodeWithText("Save").assertIsEnabled()
+        composeTestRule.onNodeWithText(SAVE_BUTTON_TEXT).assertIsEnabled()
     }
 
     @Test
@@ -84,7 +84,7 @@ class BgInputRowTest {
             }
         }
 
-        composeTestRule.onNodeWithText("Save").performClick()
+        composeTestRule.onNodeWithText(SAVE_BUTTON_TEXT).performClick()
         assertTrue(saved)
     }
 
@@ -103,5 +103,9 @@ class BgInputRowTest {
         }
 
         composeTestRule.onNodeWithText("Must be >= 2.8 mmol/L").assertIsDisplayed()
+    }
+
+    companion object {
+        private const val SAVE_BUTTON_TEXT = "Save reading"
     }
 }

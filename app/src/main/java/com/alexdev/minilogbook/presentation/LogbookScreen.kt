@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -80,7 +81,14 @@ internal fun LogbookContent(
                 onSave = { onEvent(LogbookUiEvent.SaveReading) },
             )
         }
-        EntryList(modifier = Modifier.weight(1f), entries = state.entries, unit = state.selectedUnit)
+        EntryList(
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .testTag(stringResource(id = R.string.entry_list_tag)),
+            entries = state.entries,
+            unit = state.selectedUnit,
+        )
     }
 }
 

@@ -4,13 +4,16 @@ import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isSelectable
 import androidx.compose.ui.test.isSelected
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onFirst
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToNode
 import com.alexdev.minilogbook.domain.model.BgEntry
 import com.alexdev.minilogbook.domain.model.BgUnit
 import com.alexdev.minilogbook.domain.model.label
@@ -23,22 +26,6 @@ class LogbookContentTest {
     @get:Rule
     val composeRule = createAndroidComposeRule<ComponentActivity>()
 
-    private fun averageText(
-        value: String,
-        unit: BgUnit,
-    ) = "Your average is $value ${unit.label()}"
-
-    private fun saveText() = "Save"
-
-    private fun entry(
-        id: Long,
-        valueInMmol: Double,
-    ) = BgEntry(
-        id = id,
-        valueInMmol = valueInMmol,
-        timestamp = System.currentTimeMillis(),
-    )
-
     @Test
     fun emptyState_showsDashAverage() {
         composeRule.setContent {
@@ -47,7 +34,7 @@ class LogbookContentTest {
             }
         }
 
-        composeRule.onNodeWithText(averageText("—", BgUnit.MMOL)).assertIsDisplayed()
+        composeRule.onNodeWithText("—").assertIsDisplayed()
     }
 
     @Test
@@ -58,7 +45,7 @@ class LogbookContentTest {
             }
         }
 
-        composeRule.onNodeWithText(saveText()).assertIsNotEnabled()
+        composeRule.onNodeWithText(SAVE_BUTTON_TEXT).assertIsNotEnabled()
     }
 
     @Test
@@ -129,7 +116,7 @@ class LogbookContentTest {
             }
         }
 
-        composeRule.onNodeWithText(saveText()).assertIsEnabled()
+        composeRule.onNodeWithText(SAVE_BUTTON_TEXT).assertIsEnabled()
     }
 
     @Test
@@ -147,7 +134,7 @@ class LogbookContentTest {
             }
         }
 
-        composeRule.onNodeWithText(saveText()).assertIsNotEnabled()
+        composeRule.onNodeWithText(SAVE_BUTTON_TEXT).assertIsNotEnabled()
     }
 
     @Test
@@ -181,50 +168,12 @@ class LogbookContentTest {
             }
         }
 
-        composeRule.onNodeWithText(saveText()).performClick()
+        composeRule.onNodeWithText(SAVE_BUTTON_TEXT).performClick()
         assertEquals(listOf(LogbookUiEvent.SaveReading), intents)
     }
 
     @Test
-    fun average_displaysCorrectlyInMmol() {
-        composeRule.setContent {
-            MiniLogbookTheme {
-                LogbookContent(
-                    state =
-                        LogbookUiState(
-                            selectedUnit = BgUnit.MMOL,
-                            averageDisplay = "5.50",
-                            entries = listOf(entry(1, 5.5)),
-                        ),
-                    onEvent = {},
-                )
-            }
-        }
-
-        composeRule.onNodeWithText(averageText("5.50", BgUnit.MMOL)).assertIsDisplayed()
-    }
-
-    @Test
-    fun average_displaysCorrectlyInMgDl() {
-        composeRule.setContent {
-            MiniLogbookTheme {
-                LogbookContent(
-                    state =
-                        LogbookUiState(
-                            selectedUnit = BgUnit.MGDL,
-                            averageDisplay = "99.10",
-                            entries = listOf(entry(1, 5.5)),
-                        ),
-                    onEvent = {},
-                )
-            }
-        }
-
-        composeRule.onNodeWithText(averageText("99.10", BgUnit.MGDL)).assertIsDisplayed()
-    }
-
-    @Test
-    fun entriesList_displaysAllEntries() {
+    fun entriesList_showsCorrectStatusBadgePerEntry() {
         composeRule.setContent {
             MiniLogbookTheme {
                 LogbookContent(
@@ -233,8 +182,10 @@ class LogbookContentTest {
                             selectedUnit = BgUnit.MMOL,
                             entries =
                                 listOf(
-                                    entry(id = 1, valueInMmol = 5.5),
-                                    entry(id = 2, valueInMmol = 6.2),
+                                    BgEntry(id = 1, valueInMmol = 5.5, timestamp = System.currentTimeMillis()),
+                                    BgEntry(id = 2, valueInMmol = 2.0, timestamp = System.currentTimeMillis()),
+                                    BgEntry(id = 3, valueInMmol = 8.5, timestamp = System.currentTimeMillis()),
+                                    BgEntry(id = 4, valueInMmol = 11.0, timestamp = System.currentTimeMillis()),
                                 ),
                         ),
                     onEvent = {},
@@ -242,8 +193,10 @@ class LogbookContentTest {
             }
         }
 
-        composeRule.onNodeWithText("5.50 mmol/L").assertIsDisplayed()
-        composeRule.onNodeWithText("6.20 mmol/L").assertIsDisplayed()
+        composeRule.onAllNodesWithText("Within target").onFirst().assertIsDisplayed()
+        composeRule.onAllNodesWithText("Below target").onFirst().assertIsDisplayed()
+        composeRule.onAllNodesWithText("Above target").onFirst().assertIsDisplayed()
+        composeRule.onNodeWithTag("entry list").performScrollToNode(hasText("High")).assertIsDisplayed()
     }
 
     @Test
@@ -259,5 +212,9 @@ class LogbookContentTest {
 
         composeRule.onAllNodesWithText(BgUnit.MMOL.label(), useUnmergedTree = true).onFirst().assertIsDisplayed()
         composeRule.onNodeWithText("5.50 mmol/L").assertDoesNotExist()
+    }
+
+    companion object {
+        private const val SAVE_BUTTON_TEXT = "Save reading"
     }
 }

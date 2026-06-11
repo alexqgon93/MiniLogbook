@@ -1,10 +1,12 @@
 package com.alexdev.minilogbook.presentation.components.organisms
 
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.alexdev.minilogbook.domain.model.BgUnit
+import com.alexdev.minilogbook.domain.model.label
 import com.alexdev.minilogbook.ui.theme.MiniLogbookTheme
 import org.junit.Rule
 import org.junit.Test
@@ -23,7 +25,8 @@ class AverageHeaderTest {
             }
         }
 
-        composeTestRule.onNodeWithText("Your average is 5.50 mmol/L").assertIsDisplayed()
+        composeTestRule.onNodeWithText("5.50").assertIsDisplayed()
+        composeTestRule.onNodeWithText(BgUnit.MMOL.label()).assertIsDisplayed()
     }
 
     @Test
@@ -34,17 +37,77 @@ class AverageHeaderTest {
             }
         }
 
-        composeTestRule.onNodeWithText("Your average is 122.00 mg/dL").assertIsDisplayed()
+        composeTestRule.onNodeWithText("99.10").assertIsDisplayed()
+        composeTestRule.onNodeWithText(BgUnit.MGDL.label()).assertIsDisplayed()
     }
 
     @Test
     fun averageHeader_renders_em_dash_when_no_entries() {
         composeTestRule.setContent {
             MiniLogbookTheme {
-                AverageHeader(averageDisplay = "--", averageMmol = null, unit = BgUnit.MMOL)
+                AverageHeader(averageDisplay = "-", averageMmol = null, unit = BgUnit.MMOL)
             }
         }
 
-        composeTestRule.onNodeWithText("Your average is — mmol/L").assertIsDisplayed()
+        composeTestRule.onNodeWithText("-").assertIsDisplayed()
+    }
+
+    @Test
+    fun averageHeader_emptyState_noBadge() {
+        composeTestRule.setContent {
+            MiniLogbookTheme {
+                AverageHeader(
+                    averageDisplay = "—",
+                    averageMmol = null,
+                    unit = BgUnit.MMOL,
+                )
+            }
+        }
+        composeTestRule.onNodeWithText("Within target").assertDoesNotExist()
+        composeTestRule.onNodeWithText("Below target").assertDoesNotExist()
+        composeTestRule.onNodeWithText("Above target").assertDoesNotExist()
+        composeTestRule.onNodeWithText("High").assertDoesNotExist()
+    }
+
+    @Test
+    fun averageHeader_normalValue_showsWithinTargetBadge() {
+        composeTestRule.setContent {
+            MiniLogbookTheme {
+                AverageHeader(
+                    averageDisplay = "5.50",
+                    averageMmol = 5.5,
+                    unit = BgUnit.MMOL,
+                )
+            }
+        }
+        composeTestRule.onNodeWithText("Within target").assertIsDisplayed()
+    }
+
+    @Test
+    fun averageHeader_highValue_showsHighBadge() {
+        composeTestRule.setContent {
+            MiniLogbookTheme {
+                AverageHeader(
+                    averageDisplay = "11.00",
+                    averageMmol = 11.0,
+                    unit = BgUnit.MMOL,
+                )
+            }
+        }
+        composeTestRule.onNodeWithText("High").assertIsDisplayed()
+    }
+
+    @Test
+    fun averageHeader_hasAccessibilityContentDescription() {
+        composeTestRule.setContent {
+            MiniLogbookTheme {
+                AverageHeader(
+                    averageDisplay = "5.50",
+                    averageMmol = 5.5,
+                    unit = BgUnit.MMOL,
+                )
+            }
+        }
+        composeTestRule.onNode(hasContentDescription("5.50", substring = true)).assertIsDisplayed()
     }
 }

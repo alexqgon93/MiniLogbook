@@ -16,9 +16,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.alexdev.minilogbook.R
 import com.alexdev.minilogbook.presentation.components.atoms.InputErrorText
 import com.alexdev.minilogbook.presentation.components.molecules.BgValueTextField
 import com.alexdev.minilogbook.ui.theme.MiniLogbookTheme
@@ -56,7 +58,7 @@ fun BgInputRow(
         )
         Spacer(Modifier.width(8.dp))
         Text(
-            text = "Save reading",
+            text = stringResource(R.string.save_reading),
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.SemiBold,
         )

@@ -7,4 +7,6 @@
     <string name="entry_item_value_tag">entry_item_value</string>
     <string name="entry_item_unit_tag">entry_item_unit</string>
     <string name="your_average">Your average</string>
+    <string name="save_reading">Save reading</string>
+    <string name="entry_list_tag">entry list</string>
 </resources>
