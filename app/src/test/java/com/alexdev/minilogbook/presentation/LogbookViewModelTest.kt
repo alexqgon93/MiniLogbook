@@ -205,7 +205,7 @@ class LogbookViewModelTest {
         fun `GIVEN empty entries WHEN collected THEN average shows dash`() =
             runTest {
                 advanceUntilIdle()
-                viewModel.uiState.value.averageDisplay shouldBe "-"
+                viewModel.uiState.value.averageDisplay shouldBe "—"
             }
 
         @Test
