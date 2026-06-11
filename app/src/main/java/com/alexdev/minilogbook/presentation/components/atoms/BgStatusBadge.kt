@@ -3,7 +3,7 @@ package com.alexdev.minilogbook.presentation.components.atoms
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,6 +15,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,13 +29,15 @@ fun BgStatusBadge(
     status: BgStatus,
 ) {
     val style = status.toStyle(isDark = isSystemInDarkTheme())
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
+    FlowRow(
         horizontalArrangement = Arrangement.spacedBy(4.dp),
+        verticalArrangement = Arrangement.spacedBy(2.dp),
+        itemVerticalAlignment = Alignment.CenterVertically,
         modifier =
             modifier
                 .background(color = style.backgroundColor, shape = RoundedCornerShape(percent = 50))
-                .padding(horizontal = 10.dp, vertical = 4.dp),
+                .padding(horizontal = 10.dp, vertical = 4.dp)
+                .semantics { contentDescription = style.label },
     ) {
         Icon(
             imageVector = Icons.Filled.CheckCircle,

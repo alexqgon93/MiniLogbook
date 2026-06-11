@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -20,13 +21,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.alexdev.minilogbook.R
 import com.alexdev.minilogbook.domain.model.BgUnit
 import com.alexdev.minilogbook.domain.model.label
 import com.alexdev.minilogbook.domain.model.toBgStatus
 import com.alexdev.minilogbook.presentation.components.atoms.BgStatusBadge
+import com.alexdev.minilogbook.presentation.components.atoms.toStyle
 import com.alexdev.minilogbook.ui.theme.Emerald50
 import com.alexdev.minilogbook.ui.theme.Emerald500
 import com.alexdev.minilogbook.ui.theme.MiniLogbookTheme
@@ -41,22 +47,33 @@ fun AverageHeader(
     val status = averageMmol?.toBgStatus()
 
     Card(
-        modifier = modifier.fillMaxWidth(),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .semantics(mergeDescendants = true) {
+                    contentDescription =
+                        buildString {
+                            append("Your average is $averageDisplay ${unit.label()}")
+                            if (status != null) append(", ${status.toStyle().label}")
+                        }
+                },
         shape = RoundedCornerShape(size = 16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
-        Row(
+        FlowRow(
             modifier =
                 Modifier
                     .fillMaxWidth()
                     .padding(all = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            itemVerticalAlignment = Alignment.CenterVertically,
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(space = 12.dp),
+                modifier = Modifier.weight(1f),
             ) {
                 Box(
                     contentAlignment = Alignment.Center,
@@ -74,7 +91,7 @@ fun AverageHeader(
                 }
                 Column {
                     Text(
-                        text = "Your average",
+                        text = stringResource(R.string.your_average),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )

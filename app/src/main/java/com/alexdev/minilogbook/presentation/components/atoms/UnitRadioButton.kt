@@ -3,7 +3,7 @@ package com.alexdev.minilogbook.presentation.components.atoms
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -13,6 +13,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -29,14 +32,18 @@ fun UnitRadioButton(
 ) {
     val borderColor = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline
 
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
+    FlowRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+        itemVerticalAlignment = Alignment.CenterVertically,
         modifier =
             modifier
                 .border(width = 1.5.dp, color = borderColor, shape = RoundedCornerShape(size = 8.dp))
-                .clickable(onClick = onSelected)
-                .padding(horizontal = 12.dp, vertical = 10.dp),
+                .clickable(onClick = onSelected, role = Role.RadioButton)
+                .padding(horizontal = 12.dp, vertical = 10.dp)
+                .semantics {
+                    contentDescription = "${unit.label()}, ${if (selected) "selected" else "not selected"}"
+                },
     ) {
         RadioButton(
             selected = selected,
