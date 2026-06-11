@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.hiltAndroid) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.ktlint) apply false
+    alias(libs.plugins.paparazzi) apply false
 }
 
 tasks.register<Delete>("clean") {

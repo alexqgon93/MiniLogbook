@@ -247,7 +247,7 @@ class LogbookContentTest {
     }
 
     @Test
-    fun entriesList_emptyListShowsNoReadingNodes() {
+    fun entriesList_emptyListShowsNoEntryNodes() {
         composeRule.setContent {
             MiniLogbookTheme {
                 LogbookContent(

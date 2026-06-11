@@ -38,7 +38,7 @@ class AverageHeaderTest {
     }
 
     @Test
-    fun averageHeader_renders_em_dash_when_no_readings() {
+    fun averageHeader_renders_em_dash_when_no_entries() {
         composeTestRule.setContent {
             MiniLogbookTheme {
                 AverageHeader(average = "—", unit = BgUnit.MMOL)
