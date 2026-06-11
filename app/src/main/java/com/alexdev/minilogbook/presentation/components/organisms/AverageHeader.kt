@@ -44,30 +44,32 @@ fun AverageHeader(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(size = 16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(all = 16.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(all = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(space = 12.dp)
+                horizontalArrangement = Arrangement.spacedBy(space = 12.dp),
             ) {
                 Box(
                     contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .size(48.dp)
-                        .background(color = Emerald50, shape = RoundedCornerShape(size = 12.dp))
+                    modifier =
+                        Modifier
+                            .size(48.dp)
+                            .background(color = Emerald50, shape = RoundedCornerShape(size = 12.dp)),
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.TrendingUp,
                         contentDescription = null,
                         tint = Emerald500,
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(24.dp),
                     )
                 }
                 Column {
@@ -78,7 +80,7 @@ fun AverageHeader(
                     )
                     Row(
                         verticalAlignment = Alignment.Bottom,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
                     ) {
                         Text(
                             text = averageDisplay,
@@ -90,7 +92,7 @@ fun AverageHeader(
                             text = unit.label(),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.padding(bottom = 4.dp)
+                            modifier = Modifier.padding(bottom = 4.dp),
                         )
                     }
                 }
@@ -104,18 +106,21 @@ fun AverageHeader(
 
 @Preview(showBackground = true, name = "mmol/L")
 @Composable
-private fun AverageHeaderPreviewMmol() = MiniLogbookTheme {
-    AverageHeader(averageDisplay = "5.50", averageMmol = 5.50, unit = BgUnit.MMOL)
-}
+private fun AverageHeaderPreviewMmol() =
+    MiniLogbookTheme {
+        AverageHeader(averageDisplay = "5.50", averageMmol = 5.50, unit = BgUnit.MMOL)
+    }
 
 @Preview(showBackground = true, name = "mg/dL")
 @Composable
-private fun AverageHeaderPreviewMgDl() = MiniLogbookTheme {
-    AverageHeader(averageDisplay = "99.10", averageMmol = 6.77, unit = BgUnit.MGDL)
-}
+private fun AverageHeaderPreviewMgDl() =
+    MiniLogbookTheme {
+        AverageHeader(averageDisplay = "99.10", averageMmol = 6.77, unit = BgUnit.MGDL)
+    }
 
 @Preview(showBackground = true, name = "Empty state")
 @Composable
-private fun AverageHeaderPreviewEmpty() = MiniLogbookTheme {
-    AverageHeader(averageDisplay = "--", averageMmol = null, unit = BgUnit.MMOL)
-}
+private fun AverageHeaderPreviewEmpty() =
+    MiniLogbookTheme {
+        AverageHeader(averageDisplay = "--", averageMmol = null, unit = BgUnit.MMOL)
+    }
