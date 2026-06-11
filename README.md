@@ -158,3 +158,8 @@ Minimum SDK: **26** | Target SDK: **35**
 - **Robolectric** — migrate Compose UI tests to Robolectric to remove the API 34+ Espresso limitation and enable CI without an emulator
 - **CI pipeline** — GitHub Actions workflow running unit tests + Paparazzi verify on every PR
 - **Accessibility** — `contentDescription` audit and TalkBack testing
+
+## Trade-offs
+- `material-icons-extended` included for convenience during development.
+  In production, individual icons would be copied as `ImageVector`
+  constants to avoid the ~17MB dependency size impact.
