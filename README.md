@@ -9,10 +9,12 @@ A single-screen Android application for tracking blood glucose (BG) readings, bu
 - Select blood glucose unit: **mmol/L** or **mg/dL**
 - Enter a BG value via numeric keyboard with real-time validation
 - Save readings and track a running **average** displayed at the top
-- View previously entered readings in a scrollable list
+- View previously entered readings in a scrollable list grouped by day
 - **Unit switching** converts all values and labels instantly, including the current input
+- **Status badge** per reading and on the average card (Below target / Within target / Above target / High)
 - Values are **persisted** via Room database across app restarts
 - Conversion factor: `1 mmol/L = 18.0182 mg/dL`
+- **Accessibility** support: TalkBack-ready with content descriptions, semantic roles, and FlowRow layouts for large text sizes
 ---
 
 ## Architecture
@@ -33,7 +35,7 @@ app/
     │   └── ConvertionUtils # Extention functions to convert from or to
     ├── presentation/
     │   ├── components/
-    │   │   ├── atoms/      # InputErrorText, UnitRadioButton
+    │   │   ├── atoms/      # InputErrorText, UnitRadioButton, StatusBadge, BgStatusIcon
     │   │   ├── molecules/  # BgValueTextField, EntryItem, UnitSelector
     │   │   └── organisms/  # AverageHeader, EntryList, BgInputRow
     │   ├── utils/
@@ -77,6 +79,28 @@ app/
 
 ---
 
+## Design System
+
+### Theme
+Material 3 with Emerald Green (`#10B981`) as primary color. Full light and dark schemes defined.
+
+| Token | Light | Dark |
+|---|---|---|
+| Primary | `#10B981` | `#10B981` |
+| Background | `#F9FAFB` | `#111827` |
+| Surface | `#FFFFFF` | `#1F2937` |
+
+### BG Status
+
+| Status | Range (mmol/L) | Range (mg/dL) | Color |
+|---|---|---|---|
+| Below target | < 2.8 | < 50.5 | 🔵 Blue |
+| Within target | 2.8 – 7.8 | 50.5 – 140 | 🟢 Green |
+| Above target | 7.8 – 10.0 | 140 – 180 | 🟠 Orange |
+| High | > 10.0 | > 180 | 🔴 Red |
+
+---
+
 ## Validation Rules
 
 Blood glucose values are validated against clinically meaningful bounds:
@@ -88,14 +112,14 @@ Blood glucose values are validated against clinically meaningful bounds:
 
 - **Minimum (2.8 mmol/L)** — threshold for severe hypoglycaemia; values below this are a medical emergency and outside the realistic range of a self-monitored reading.
 - **Maximum (33.3 mmol/L)** — clinical threshold for Hyperosmolar Hyperglycaemic State (HHS); the most extreme diabetic emergency a person managing glucose at home would realistically log.
-  The bounds are defined once in mmol/L and derived for mg/dL via the conversion factor, keeping the domain model as the single source of truth.
+
+The bounds are defined once in mmol/L and derived for mg/dL via the conversion factor, keeping the domain model as the single source of truth.
 
 ---
 
 ## Testing
 
 ### Unit tests (`src/test/`)
-
 - **`ConvertBgValueUseCaseTest`** — pure conversion logic, no mocks
 - **`LogbookViewModelTest`** — MVI state transitions tested with Turbine; `ConvertBgValueUseCase` used as real implementation (not mocked) since it has no dependencies
   Covered scenarios:
@@ -104,8 +128,8 @@ Blood glucose values are validated against clinically meaningful bounds:
 - Negative / below-minimum value sets error
 - Above-maximum value sets error
 - Error message reflects current unit after unit switch
+-
 ### Compose UI tests (`src/androidTest/`)
-
 Instrumented tests running on API ≤ 33 (Espresso has a known incompatibility with `InputManager` on API 34+ that is unresolved upstream).
 
 Covered per component:
@@ -117,6 +141,7 @@ Covered per component:
 - `UnitSelectorTest` — all units rendered, correct intent emitted on click
 - `ReadingItemTest` — mmol/L and mg/dL display
 - `LogbookContentTest` — full screen integration: empty state, unit selection, input validation, average display, readings list
+-
 ### Screenshot tests — Paparazzi (`src/test/`)
 
 Paparazzi 2.0.0-alpha05 with JUnit 5 (`setup()`/`teardown()` hooks).
@@ -135,6 +160,16 @@ Golden images are committed under `src/test/snapshots/`.
 
 ---
 
+## Accessibility
+
+- `FlowRow` used instead of `Row` in all multi-element components (`ReadingItem`, `AverageHeader`, `UnitRadioButton`, `StatusBadge`) — layout reflows correctly at large font sizes
+- `contentDescription` on `ReadingItem` card — TalkBack reads the full reading in one announcement: time, value, unit, and status
+- `semantics(mergeDescendants = true)` on `AverageHeader` — prevents TalkBack from reading each child element separately
+- `role = Role.RadioButton` on `UnitRadioButton` — TalkBack correctly announces it as a radio button
+- Decorative icons have `contentDescription = null` — TalkBack skips them
+
+---
+
 ## Setup
 
 ```bash
@@ -149,6 +184,14 @@ Minimum SDK: **26** | Target SDK: **35**
 
 ---
 
+## Trade-offs
+
+- `material-icons-extended` included for convenience. In production, individual icons would be copied as `ImageVector` constants to avoid the ~17MB dependency size impact.
+- Compose UI tests pinned to API ≤ 33 due to an unresolved Espresso/`InputManager` incompatibility on API 34+. Robolectric would be the production solution to remove this constraint.
+- Paparazzi on `2.0.0-alpha05` due to Gradle 9.x / Kotlin 2.x toolchain requirements.
+
+---
+
 ## What I would add with more time
 
 - **Delete / edit readings** — swipe-to-delete on list items
@@ -157,9 +200,3 @@ Minimum SDK: **26** | Target SDK: **35**
 - **Dark theme preview** — Paparazzi snapshot with `DeviceConfig` dark mode flag
 - **Robolectric** — migrate Compose UI tests to Robolectric to remove the API 34+ Espresso limitation and enable CI without an emulator
 - **CI pipeline** — GitHub Actions workflow running unit tests + Paparazzi verify on every PR
-- **Accessibility** — `contentDescription` audit and TalkBack testing
-
-## Trade-offs
-- `material-icons-extended` included for convenience during development.
-  In production, individual icons would be copied as `ImageVector`
-  constants to avoid the ~17MB dependency size impact.
