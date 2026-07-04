@@ -19,6 +19,7 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -95,6 +96,22 @@ class LogbookViewModelTest {
             runTest {
                 viewModel.onHandleUiEvent(LogbookUiEvent.UpdateInputValue("999.0"))
                 viewModel.uiState.value.inputError shouldBe AboveMax(33.3, BgUnit.MMOL)
+            }
+
+        @Test
+        fun `GIVEN value equals min WHEN handleInputChange THEN no error shown`() =
+            runTest {
+                viewModel.onHandleUiEvent(LogbookUiEvent.UpdateInputValue("2.8"))
+                viewModel.uiState.value.inputError
+                    .shouldBeNull()
+            }
+
+        @Test
+        fun `GIVEN value equals max WHEN handleInputChange THEN no error shown`() =
+            runTest {
+                viewModel.onHandleUiEvent(LogbookUiEvent.UpdateInputValue("33.3"))
+                viewModel.uiState.value.inputError
+                    .shouldBeNull()
             }
 
         @Test
@@ -243,6 +260,57 @@ class LogbookViewModelTest {
                 advanceUntilIdle()
 
                 viewModel.uiState.value.averageDisplay shouldBe "6.00"
+            }
+    }
+
+    @Nested
+    inner class Load {
+        @Test
+        fun `GIVEN entries load fails WHEN collected THEN load error is shown without input error`() =
+            runTest {
+                every { getBgEntriesUseCase() } returns
+                    flow {
+                        throw RuntimeException("DB error")
+                    }
+                viewModel =
+                    LogbookViewModel(
+                        getBgEntriesUseCase,
+                        saveBgEntryUseCase,
+                        bgValueFormatter,
+                        timeProvider,
+                    )
+                advanceUntilIdle()
+
+                viewModel.uiState.value.loadError shouldBe true
+                viewModel.uiState.value.inputError
+                    .shouldBeNull()
+            }
+
+        @Test
+        fun `GIVEN entries load fails WHEN retry succeeds THEN load error clears and entries update`() =
+            runTest {
+                val recoveredEntries = listOf(BgEntry(valueInMmol = 5.0, timestamp = 1000L))
+                every { getBgEntriesUseCase() } returnsMany
+                    listOf(
+                        flow {
+                            throw RuntimeException("DB error")
+                        },
+                        flowOf(recoveredEntries),
+                    )
+                viewModel =
+                    LogbookViewModel(
+                        getBgEntriesUseCase,
+                        saveBgEntryUseCase,
+                        bgValueFormatter,
+                        timeProvider,
+                    )
+                advanceUntilIdle()
+
+                viewModel.onHandleUiEvent(LogbookUiEvent.RetryLoad)
+                advanceUntilIdle()
+
+                viewModel.uiState.value.loadError shouldBe false
+                viewModel.uiState.value.entries shouldBe recoveredEntries
             }
     }
 }

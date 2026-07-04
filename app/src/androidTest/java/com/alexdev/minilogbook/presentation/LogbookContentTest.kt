@@ -16,7 +16,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToNode
 import com.alexdev.minilogbook.domain.model.BgEntry
 import com.alexdev.minilogbook.domain.model.BgUnit
-import com.alexdev.minilogbook.domain.model.labelRes
+import com.alexdev.minilogbook.presentation.utils.labelRes
 import com.alexdev.minilogbook.ui.theme.MiniLogbookTheme
 import junit.framework.TestCase.assertEquals
 import org.junit.Rule

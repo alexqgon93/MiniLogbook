@@ -1,17 +1,18 @@
-package com.alexdev.minilogbook.domain.model
+package com.alexdev.minilogbook.presentation.utils
 
 import com.alexdev.minilogbook.R
+import com.alexdev.minilogbook.domain.model.BgUnit
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class BgUnitTest {
+class BgUnitLabelMapperTest {
     @Test
-    fun `GIVEN MMOL unit WHEN label is requested THEN returns mmol_L`() {
+    fun `GIVEN MMOL unit WHEN label is requested THEN returns mmol resource`() {
         assertEquals(R.string.mmol_l, BgUnit.MMOL.labelRes())
     }
 
     @Test
-    fun `GIVEN MGDL unit WHEN label is requested THEN returns mg_dL`() {
+    fun `GIVEN MGDL unit WHEN label is requested THEN returns mgdl resource`() {
         assertEquals(R.string.mg_dl, BgUnit.MGDL.labelRes())
     }
 

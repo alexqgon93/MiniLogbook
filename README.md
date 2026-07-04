@@ -73,7 +73,7 @@ app/
 | DI | Hilt |
 | Persistence | Room |
 | Async | Coroutines + Flow |
-| Unit tests | JUnit 4 + MockK + Turbine |
+| Unit tests | JUnit 5 + MockK + Kotest assertions |
 | UI tests | Compose Testing (API ≤ 33) |
 | Screenshot tests | Paparazzi 2.0.0-alpha05 + JUnit 5 |
 
@@ -180,7 +180,7 @@ cd MiniLogbook
 
 No API keys or environment variables required.
 
-Minimum SDK: **26** | Target SDK: **35**
+Minimum SDK: **26** | Target SDK: **36**
 
 ---
 

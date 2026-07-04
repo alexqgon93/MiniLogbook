@@ -5,6 +5,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.WaterDrop
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.alexdev.minilogbook.R
 import com.alexdev.minilogbook.domain.model.BgStatus
 import com.alexdev.minilogbook.ui.theme.StatusBlue
 import com.alexdev.minilogbook.ui.theme.StatusBlueBackground
@@ -20,7 +21,7 @@ import com.alexdev.minilogbook.ui.theme.StatusRedBackground
 import com.alexdev.minilogbook.ui.theme.StatusRedBackgroundDark
 
 data class BgStatusStyle(
-    val label: String,
+    val labelRes: Int,
     val color: Color,
     val backgroundColor: Color,
     val icon: ImageVector,
@@ -30,7 +31,7 @@ fun BgStatus.toStyle(isDark: Boolean = false) =
     when (this) {
         BgStatus.LOW ->
             BgStatusStyle(
-                label = "Below target",
+                labelRes = R.string.bg_status_low,
                 color = StatusBlue,
                 backgroundColor = if (isDark) StatusBlueBackgroundDark else StatusBlueBackground,
                 icon = Icons.Filled.WaterDrop,
@@ -38,7 +39,7 @@ fun BgStatus.toStyle(isDark: Boolean = false) =
 
         BgStatus.NORMAL ->
             BgStatusStyle(
-                label = "Within target",
+                labelRes = R.string.bg_status_normal,
                 color = StatusGreen,
                 backgroundColor = if (isDark) StatusGreenBackgroundDark else StatusGreenBackground,
                 icon = Icons.Filled.Favorite,
@@ -46,7 +47,7 @@ fun BgStatus.toStyle(isDark: Boolean = false) =
 
         BgStatus.ELEVATED ->
             BgStatusStyle(
-                label = "Above target",
+                labelRes = R.string.bg_status_elevated,
                 color = StatusOrange,
                 backgroundColor = if (isDark) StatusOrangeBackgroundDark else StatusOrangeBackground,
                 icon = Icons.Filled.WaterDrop,
@@ -54,7 +55,7 @@ fun BgStatus.toStyle(isDark: Boolean = false) =
 
         BgStatus.HIGH ->
             BgStatusStyle(
-                label = "High",
+                labelRes = R.string.bg_status_high,
                 color = StatusRed,
                 backgroundColor = if (isDark) StatusRedBackgroundDark else StatusRedBackground,
                 icon = Icons.Filled.WaterDrop,

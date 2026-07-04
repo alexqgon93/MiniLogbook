@@ -22,7 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.alexdev.minilogbook.R
 import com.alexdev.minilogbook.domain.model.BgUnit
-import com.alexdev.minilogbook.domain.model.labelRes
+import com.alexdev.minilogbook.presentation.utils.labelRes
 import com.alexdev.minilogbook.ui.theme.MiniLogbookTheme
 
 @Composable

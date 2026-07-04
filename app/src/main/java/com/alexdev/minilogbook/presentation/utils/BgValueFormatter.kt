@@ -1,11 +1,12 @@
 package com.alexdev.minilogbook.presentation.utils
 
+import java.util.Locale
 import javax.inject.Inject
 
 class BgValueFormatter
     @Inject
     constructor() {
-        fun format(value: Double): String = "%.2f".format(value)
+        fun format(value: Double): String = String.format(Locale.US, "%.2f", value)
 
         fun formatWithUnit(
             value: Double,

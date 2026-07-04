@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.alexdev.minilogbook.data.local.AppDataBase
 import com.alexdev.minilogbook.data.local.BgEntryDao
+import com.alexdev.minilogbook.data.local.DatabaseMigrations
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,7 +27,7 @@ object DatabaseModule {
                 context = context,
                 klass = AppDataBase::class.java,
                 name = DATABASE_NAME,
-            ).fallbackToDestructiveMigration(dropAllTables = true)
+            ).addMigrations(*DatabaseMigrations.ALL)
             .build()
 
     @Provides

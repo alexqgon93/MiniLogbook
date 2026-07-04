@@ -28,10 +28,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.alexdev.minilogbook.R
 import com.alexdev.minilogbook.domain.model.BgUnit
-import com.alexdev.minilogbook.domain.model.labelRes
 import com.alexdev.minilogbook.domain.model.toBgStatus
 import com.alexdev.minilogbook.presentation.components.atoms.BgStatusBadge
 import com.alexdev.minilogbook.presentation.components.atoms.toStyle
+import com.alexdev.minilogbook.presentation.utils.labelRes
 import com.alexdev.minilogbook.ui.theme.Emerald50
 import com.alexdev.minilogbook.ui.theme.Emerald500
 import com.alexdev.minilogbook.ui.theme.MiniLogbookTheme
@@ -45,10 +45,11 @@ fun AverageHeader(
 ) {
     val status = averageMmol?.toBgStatus()
     val unitLabel = stringResource(unit.labelRes())
+    val statusLabel = status?.let { stringResource(it.toStyle().labelRes) }
     val contentDescriptionText =
         buildString {
             append(stringResource(R.string.your_average_is, averageDisplay, unitLabel))
-            if (status != null) append(", ${status.toStyle().label}")
+            if (statusLabel != null) append(", $statusLabel")
         }
 
     Card(

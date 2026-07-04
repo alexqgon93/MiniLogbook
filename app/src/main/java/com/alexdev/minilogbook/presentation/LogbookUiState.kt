@@ -10,4 +10,5 @@ data class LogbookUiState(
     val averageDisplay: String = "—",
     val averageMmol: Double? = null,
     val inputError: LogbookInputError? = null,
+    val loadError: Boolean = false,
 )

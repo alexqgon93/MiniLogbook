@@ -10,10 +10,12 @@ import com.alexdev.minilogbook.domain.time.TimeProvider
 import com.alexdev.minilogbook.domain.usecase.GetBgEntriesUseCase
 import com.alexdev.minilogbook.domain.usecase.SaveBgEntryUseCase
 import com.alexdev.minilogbook.presentation.LogbookUiEvent.ChangeUnit
+import com.alexdev.minilogbook.presentation.LogbookUiEvent.RetryLoad
 import com.alexdev.minilogbook.presentation.LogbookUiEvent.SaveReading
 import com.alexdev.minilogbook.presentation.LogbookUiEvent.UpdateInputValue
 import com.alexdev.minilogbook.presentation.utils.BgValueFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -33,27 +35,10 @@ class LogbookViewModel
     ) : ViewModel() {
         private val _uiState = MutableStateFlow(LogbookUiState())
         val uiState: StateFlow<LogbookUiState> = _uiState.asStateFlow()
+        private var entriesJob: Job? = null
 
         init {
-            viewModelScope.launch {
-                val entriesFlow =
-                    getBgEntriesUseCase().catch {
-                        _uiState.update { state ->
-                            state.copy(inputError = LogbookInputError.LoadFailed)
-                        }
-                    }
-
-                entriesFlow.collect { entries ->
-                    val (displayAvg, avgMmol) = computeAverage(entries, _uiState.value.selectedUnit)
-                    _uiState.update {
-                        it.copy(
-                            entries = entries,
-                            averageDisplay = displayAvg,
-                            averageMmol = avgMmol,
-                        )
-                    }
-                }
-            }
+            observeEntries()
         }
 
         fun onHandleUiEvent(event: LogbookUiEvent) =
@@ -61,7 +46,31 @@ class LogbookViewModel
                 is UpdateInputValue -> handleInputChange(input = event.input)
                 is ChangeUnit -> handleUnitChange(newUnit = event.unit)
                 SaveReading -> handleSave()
+                RetryLoad -> observeEntries()
             }
+
+        private fun observeEntries() {
+            entriesJob?.cancel()
+            entriesJob =
+                viewModelScope.launch {
+                    getBgEntriesUseCase()
+                        .catch {
+                            _uiState.update { state ->
+                                state.copy(loadError = true)
+                            }
+                        }.collect { entries ->
+                            val (displayAvg, avgMmol) = computeAverage(entries, _uiState.value.selectedUnit)
+                            _uiState.update {
+                                it.copy(
+                                    entries = entries,
+                                    averageDisplay = displayAvg,
+                                    averageMmol = avgMmol,
+                                    loadError = false,
+                                )
+                            }
+                        }
+                }
+        }
 
         private fun handleInputChange(input: String) {
             _uiState.update {

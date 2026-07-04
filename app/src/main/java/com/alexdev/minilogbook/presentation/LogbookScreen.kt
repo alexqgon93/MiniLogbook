@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -16,16 +17,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alexdev.minilogbook.R
 import com.alexdev.minilogbook.domain.model.BgUnit
-import com.alexdev.minilogbook.domain.model.labelRes
 import com.alexdev.minilogbook.presentation.components.molecules.UnitSelector
 import com.alexdev.minilogbook.presentation.components.organisms.AverageHeader
 import com.alexdev.minilogbook.presentation.components.organisms.BgInputRow
 import com.alexdev.minilogbook.presentation.components.organisms.EntryList
 import com.alexdev.minilogbook.presentation.preview.previewEntriesList
+import com.alexdev.minilogbook.presentation.utils.labelRes
 import com.alexdev.minilogbook.ui.theme.MiniLogbookTheme
 
 @Composable
@@ -109,6 +110,16 @@ internal fun LogbookContent(
             entries = state.entries,
             unit = state.selectedUnit,
         )
+        if (state.loadError) {
+            Text(
+                text = stringResource(R.string.input_error_load_failed),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.error,
+            )
+            Button(onClick = { onEvent(LogbookUiEvent.RetryLoad) }) {
+                Text(text = stringResource(R.string.retry))
+            }
+        }
     }
 }
 

@@ -26,14 +26,15 @@ import com.alexdev.minilogbook.R
 import com.alexdev.minilogbook.domain.convertTo
 import com.alexdev.minilogbook.domain.model.BgEntry
 import com.alexdev.minilogbook.domain.model.BgUnit
-import com.alexdev.minilogbook.domain.model.labelRes
 import com.alexdev.minilogbook.domain.model.toBgStatus
 import com.alexdev.minilogbook.presentation.components.atoms.BgStatusBadge
 import com.alexdev.minilogbook.presentation.components.atoms.BgStatusIcon
 import com.alexdev.minilogbook.presentation.components.atoms.toStyle
+import com.alexdev.minilogbook.presentation.utils.labelRes
 import com.alexdev.minilogbook.ui.theme.MiniLogbookTheme
-import java.text.SimpleDateFormat
-import java.util.Date
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 @Composable
@@ -47,11 +48,14 @@ fun EntryItem(
     val unitLabel = stringResource(unit.labelRes())
     val formattedTime =
         remember(key1 = entry.timestamp) {
-            SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(entry.timestamp))
+            DateTimeFormatter
+                .ofPattern("HH:mm", Locale.getDefault())
+                .format(Instant.ofEpochMilli(entry.timestamp).atZone(ZoneId.systemDefault()))
         }
     val status = entry.valueInMmol.toBgStatus()
     val statusStyle = status.toStyle()
-    val contentDescriptionText = "$formattedTime, $displayValue $unitLabel, ${statusStyle.label}"
+    val statusLabel = stringResource(statusStyle.labelRes)
+    val contentDescriptionText = "$formattedTime, $displayValue $unitLabel, $statusLabel"
 
     Card(
         modifier =

@@ -29,14 +29,14 @@ fun UnitSelector(
 
 @Preview(showBackground = true, name = "mmol/L selected")
 @Composable
-fun UnitSelectorPreviewMmol() =
+private fun UnitSelectorPreviewMmol() =
     MiniLogbookTheme {
         UnitSelector(selected = BgUnit.MMOL, onUnitSelected = {})
     }
 
 @Preview(showBackground = true, name = "mg/dL selected")
 @Composable
-fun UnitSelectorPreviewMgDl() =
+private fun UnitSelectorPreviewMgDl() =
     MiniLogbookTheme {
         UnitSelector(selected = BgUnit.MGDL, onUnitSelected = {})
     }

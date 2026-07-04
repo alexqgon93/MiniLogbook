@@ -26,8 +26,10 @@ import com.alexdev.minilogbook.domain.model.BgEntry
 import com.alexdev.minilogbook.domain.model.BgUnit
 import com.alexdev.minilogbook.presentation.components.molecules.EntryItem
 import com.alexdev.minilogbook.ui.theme.MiniLogbookTheme
-import java.text.SimpleDateFormat
-import java.util.Date
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 @Composable
@@ -40,7 +42,10 @@ fun EntryList(
         remember(entries) {
             entries
                 .groupBy { entry ->
-                    SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(entry.timestamp)
+                    Instant
+                        .ofEpochMilli(entry.timestamp)
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate()
                 }.toSortedMap(reverseOrder())
         }
     LazyColumn(
@@ -70,17 +75,15 @@ fun EntryList(
 @Composable
 private fun EntriesDateHeader(
     modifier: Modifier = Modifier,
-    dateKey: String,
+    dateKey: LocalDate,
 ) {
     val dateDisplay =
         remember(dateKey) {
-            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            val date = sdf.parse(dateKey) ?: return@remember (dateKey to false)
-            val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
-            if (dateKey == today) {
-                SimpleDateFormat("MMMM d", Locale.getDefault()).format(date) to true
+            val locale = Locale.getDefault()
+            if (dateKey == LocalDate.now()) {
+                dateKey.format(DateTimeFormatter.ofPattern("MMMM d", locale)) to true
             } else {
-                SimpleDateFormat("EEEE, MMMM d", Locale.getDefault()).format(date) to false
+                dateKey.format(DateTimeFormatter.ofPattern("EEEE, MMMM d", locale)) to false
             }
         }
     val displayDate =

@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -29,6 +30,7 @@ fun BgStatusBadge(
     status: BgStatus,
 ) {
     val style = status.toStyle(isDark = isSystemInDarkTheme())
+    val label = stringResource(style.labelRes)
     FlowRow(
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         verticalArrangement = Arrangement.spacedBy(2.dp),
@@ -37,7 +39,7 @@ fun BgStatusBadge(
             modifier
                 .background(color = style.backgroundColor, shape = RoundedCornerShape(percent = 50))
                 .padding(horizontal = 10.dp, vertical = 4.dp)
-                .semantics { contentDescription = style.label },
+                .semantics { contentDescription = label },
     ) {
         Icon(
             imageVector = Icons.Filled.CheckCircle,
@@ -46,7 +48,7 @@ fun BgStatusBadge(
             modifier = Modifier.size(12.dp),
         )
         Text(
-            text = style.label,
+            text = label,
             color = style.color,
             style = MaterialTheme.typography.labelSmall,
             fontWeight = FontWeight.Medium,

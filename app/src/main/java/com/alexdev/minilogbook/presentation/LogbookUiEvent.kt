@@ -12,4 +12,6 @@ sealed class LogbookUiEvent {
     ) : LogbookUiEvent()
 
     object SaveReading : LogbookUiEvent()
+
+    object RetryLoad : LogbookUiEvent()
 }

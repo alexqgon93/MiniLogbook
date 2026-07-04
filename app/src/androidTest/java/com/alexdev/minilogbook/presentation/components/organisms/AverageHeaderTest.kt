@@ -1,12 +1,14 @@
 package com.alexdev.minilogbook.presentation.components.organisms
 
+import android.content.Context
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.alexdev.minilogbook.domain.model.BgUnit
-import com.alexdev.minilogbook.domain.model.labelRes
+import com.alexdev.minilogbook.presentation.utils.labelRes
 import com.alexdev.minilogbook.ui.theme.MiniLogbookTheme
 import org.junit.Rule
 import org.junit.Test
@@ -16,6 +18,7 @@ import org.junit.runner.RunWith
 class AverageHeaderTest {
     @get:Rule
     val composeTestRule = createComposeRule()
+    private val context: Context = ApplicationProvider.getApplicationContext()
 
     @Test
     fun averageHeader_renders_average_with_mmol_unit() {
@@ -26,7 +29,7 @@ class AverageHeaderTest {
         }
 
         composeTestRule.onNodeWithText("5.50").assertIsDisplayed()
-        composeTestRule.onNodeWithText(composeTestRule.activity.getString(BgUnit.MMOL.labelRes())).assertIsDisplayed()
+        composeTestRule.onNodeWithText(context.getString(BgUnit.MMOL.labelRes())).assertIsDisplayed()
     }
 
     @Test
@@ -38,7 +41,7 @@ class AverageHeaderTest {
         }
 
         composeTestRule.onNodeWithText("99.10").assertIsDisplayed()
-        composeTestRule.onNodeWithText(composeTestRule.activity.getString(BgUnit.MGDL.labelRes())).assertIsDisplayed()
+        composeTestRule.onNodeWithText(context.getString(BgUnit.MGDL.labelRes())).assertIsDisplayed()
     }
 
     @Test

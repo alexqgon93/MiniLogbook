@@ -2,6 +2,7 @@ package com.alexdev.minilogbook.presentation.utils
 
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
+import java.util.Locale
 
 class BgValueFormatterTest {
     private val formatter = BgValueFormatter()
@@ -29,5 +30,16 @@ class BgValueFormatterTest {
     @Test
     fun `GIVEN value and MGDL unit WHEN formatWithUnit is called THEN appends mgdl label`() {
         formatter.formatWithUnit(value = 99.0, unitLabel = "mg/dL") shouldBe "99.00 mg/dL"
+    }
+
+    @Test
+    fun `GIVEN locale with comma decimal separator WHEN format is called THEN uses dot decimal separator`() {
+        val defaultLocale = Locale.getDefault()
+        Locale.setDefault(Locale.GERMANY)
+        try {
+            formatter.format(value = 5.5) shouldBe "5.50"
+        } finally {
+            Locale.setDefault(defaultLocale)
+        }
     }
 }
