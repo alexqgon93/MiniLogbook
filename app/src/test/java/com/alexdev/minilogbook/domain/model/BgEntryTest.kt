@@ -1,23 +1,21 @@
 package com.alexdev.minilogbook.domain.model
 
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class BgEntryTest {
     @Test
     fun `given value only when BgEntry is created then id defaults to zero`() {
         val valueInMmol = 5.5
-        val entry = BgEntry(valueInMmol = valueInMmol)
+        val entry = BgEntry(valueInMmol = valueInMmol, timestamp = 1_717_000_000_000L)
         assertEquals(0L, entry.id)
     }
 
     @Test
-    fun `given value only when BgEntry is created then timestamp defaults to current time`() {
-        val beforeCreation = System.currentTimeMillis()
-        val entry = BgEntry(valueInMmol = 5.5)
-        val afterCreation = System.currentTimeMillis()
-        assertTrue(entry.timestamp in beforeCreation..afterCreation)
+    fun `given explicit timestamp when BgEntry is created then timestamp is preserved`() {
+        val timestamp = 1_717_000_000_000L
+        val entry = BgEntry(valueInMmol = 5.5, timestamp = timestamp)
+        assertEquals(timestamp, entry.timestamp)
     }
 
     @Test

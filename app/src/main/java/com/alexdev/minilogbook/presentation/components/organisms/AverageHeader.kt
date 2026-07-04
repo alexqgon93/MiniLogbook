@@ -20,7 +20,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -29,7 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.alexdev.minilogbook.R
 import com.alexdev.minilogbook.domain.model.BgUnit
-import com.alexdev.minilogbook.domain.model.label
+import com.alexdev.minilogbook.domain.model.labelRes
 import com.alexdev.minilogbook.domain.model.toBgStatus
 import com.alexdev.minilogbook.presentation.components.atoms.BgStatusBadge
 import com.alexdev.minilogbook.presentation.components.atoms.toStyle
@@ -45,20 +44,22 @@ fun AverageHeader(
     unit: BgUnit,
 ) {
     val status = averageMmol?.toBgStatus()
+    val unitLabel = stringResource(unit.labelRes())
+    val contentDescriptionText =
+        buildString {
+            append(stringResource(R.string.your_average_is, averageDisplay, unitLabel))
+            if (status != null) append(", ${status.toStyle().label}")
+        }
 
     Card(
         modifier =
             modifier
                 .fillMaxWidth()
                 .semantics(mergeDescendants = true) {
-                    contentDescription =
-                        buildString {
-                            append("Your average is $averageDisplay ${unit.label()}")
-                            if (status != null) append(", ${status.toStyle().label}")
-                        }
+                    contentDescription = contentDescriptionText
                 },
         shape = RoundedCornerShape(size = 16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         FlowRow(
@@ -106,7 +107,7 @@ fun AverageHeader(
                             color = MaterialTheme.colorScheme.onSurface,
                         )
                         Text(
-                            text = unit.label(),
+                            text = unitLabel,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(bottom = 4.dp),

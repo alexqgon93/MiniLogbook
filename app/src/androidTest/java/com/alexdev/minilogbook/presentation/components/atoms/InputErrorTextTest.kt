@@ -20,11 +20,11 @@ class InputErrorTextTest {
     fun inputErrorText_error_message_is_visible_when_error_is_not_null() {
         composeTestRule.setContent {
             MiniLogbookTheme {
-                InputErrorText(error = "Must be >= 2.8 mmol/L")
+                InputErrorText(error = "Must be >= 2.80 mmol/L")
             }
         }
 
-        composeTestRule.onNodeWithText("Must be >= 2.8 mmol/L").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Must be >= 2.80 mmol/L").assertIsDisplayed()
     }
 
     @Test
@@ -34,6 +34,6 @@ class InputErrorTextTest {
                 InputErrorText(error = null)
             }
         }
-        composeTestRule.onNodeWithText("Must be >= 2.8 mmol/L").assertDoesNotExist()
+        composeTestRule.onNodeWithText("Must be >= 2.80 mmol/L").assertDoesNotExist()
     }
 }

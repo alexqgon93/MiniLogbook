@@ -54,7 +54,7 @@ private val LightColorScheme =
 @Composable
 fun MiniLogbookTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit,
 ) {
     val colorScheme =

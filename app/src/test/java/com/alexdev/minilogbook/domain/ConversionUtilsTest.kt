@@ -36,7 +36,7 @@ class ConversionUtilsTest {
     fun `GIVEN mmol unit WHEN getBgRangeLimits is called THEN returns mmol min and max`() {
         val (min, max) = getBgRangeLimits(unit = BgUnit.MMOL)
         min shouldBe (2.8 plusOrMinus 1e-6)
-        max shouldBe (33.0 plusOrMinus 1e-6)
+        max shouldBe (33.3 plusOrMinus 1e-6)
     }
 
     @Test

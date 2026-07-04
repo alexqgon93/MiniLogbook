@@ -17,9 +17,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.alexdev.minilogbook.R
 import com.alexdev.minilogbook.domain.model.BgEntry
 import com.alexdev.minilogbook.domain.model.BgUnit
 import com.alexdev.minilogbook.presentation.components.molecules.EntryItem
@@ -56,7 +58,7 @@ fun EntryList(
         }
         item {
             Text(
-                text = "* Reference values may vary",
+                text = stringResource(R.string.reference_values_may_vary),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(top = 8.dp),
@@ -70,17 +72,22 @@ private fun EntriesDateHeader(
     modifier: Modifier = Modifier,
     dateKey: String,
 ) {
-    val displayDate =
+    val dateDisplay =
         remember(dateKey) {
             val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            val date = sdf.parse(dateKey) ?: return@remember dateKey
+            val date = sdf.parse(dateKey) ?: return@remember (dateKey to false)
             val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
             if (dateKey == today) {
-                val formatted = SimpleDateFormat("MMMM d", Locale.getDefault()).format(date)
-                "Today, $formatted"
+                SimpleDateFormat("MMMM d", Locale.getDefault()).format(date) to true
             } else {
-                SimpleDateFormat("EEEE, MMMM d", Locale.getDefault()).format(date)
+                SimpleDateFormat("EEEE, MMMM d", Locale.getDefault()).format(date) to false
             }
+        }
+    val displayDate =
+        if (dateDisplay.second) {
+            stringResource(R.string.today_prefix, dateDisplay.first)
+        } else {
+            dateDisplay.first
         }
     Row(
         modifier = modifier.fillMaxWidth(),

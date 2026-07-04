@@ -16,7 +16,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToNode
 import com.alexdev.minilogbook.domain.model.BgEntry
 import com.alexdev.minilogbook.domain.model.BgUnit
-import com.alexdev.minilogbook.domain.model.label
+import com.alexdev.minilogbook.domain.model.labelRes
 import com.alexdev.minilogbook.ui.theme.MiniLogbookTheme
 import junit.framework.TestCase.assertEquals
 import org.junit.Rule
@@ -56,8 +56,14 @@ class LogbookContentTest {
             }
         }
 
-        composeRule.onAllNodesWithText(BgUnit.MMOL.label()).onFirst().assertIsDisplayed()
-        composeRule.onAllNodesWithText(BgUnit.MGDL.label()).onFirst().assertIsDisplayed()
+        composeRule
+            .onAllNodesWithText(composeRule.activity.getString(BgUnit.MMOL.labelRes()))
+            .onFirst()
+            .assertIsDisplayed()
+        composeRule
+            .onAllNodesWithText(composeRule.activity.getString(BgUnit.MGDL.labelRes()))
+            .onFirst()
+            .assertIsDisplayed()
     }
 
     @Test
@@ -84,7 +90,7 @@ class LogbookContentTest {
             }
         }
 
-        composeRule.onNodeWithText(BgUnit.MGDL.label()).performClick()
+        composeRule.onNodeWithText(composeRule.activity.getString(BgUnit.MGDL.labelRes())).performClick()
         assertEquals(listOf(LogbookUiEvent.ChangeUnit(BgUnit.MGDL)), intents)
     }
 
@@ -101,7 +107,7 @@ class LogbookContentTest {
             }
         }
 
-        composeRule.onNodeWithText(BgUnit.MMOL.label()).performClick()
+        composeRule.onNodeWithText(composeRule.activity.getString(BgUnit.MMOL.labelRes())).performClick()
         assertEquals(listOf(LogbookUiEvent.ChangeUnit(BgUnit.MMOL)), intents)
     }
 
@@ -127,7 +133,7 @@ class LogbookContentTest {
                     state =
                         LogbookUiState(
                             inputValue = "-1",
-                            inputError = "Must be >= 2.8 mmol/L",
+                            inputError = LogbookInputError.BelowMin(2.8, BgUnit.MMOL),
                         ),
                     onEvent = {},
                 )
@@ -145,14 +151,14 @@ class LogbookContentTest {
                     state =
                         LogbookUiState(
                             inputValue = "-1",
-                            inputError = "Must be >= 2.8 mmol/L",
+                            inputError = LogbookInputError.BelowMin(2.8, BgUnit.MMOL),
                         ),
                     onEvent = {},
                 )
             }
         }
 
-        composeRule.onNodeWithText("Must be >= 2.8 mmol/L").assertIsDisplayed()
+        composeRule.onNodeWithText("Must be >= 2.80 mmol/L").assertIsDisplayed()
     }
 
     @Test
@@ -210,7 +216,12 @@ class LogbookContentTest {
             }
         }
 
-        composeRule.onAllNodesWithText(BgUnit.MMOL.label(), useUnmergedTree = true).onFirst().assertIsDisplayed()
+        composeRule
+            .onAllNodesWithText(
+                composeRule.activity.getString(BgUnit.MMOL.labelRes()),
+                useUnmergedTree = true,
+            ).onFirst()
+            .assertIsDisplayed()
         composeRule.onNodeWithText("5.50 mmol/L").assertDoesNotExist()
     }
 

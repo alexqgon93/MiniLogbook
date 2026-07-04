@@ -6,7 +6,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.alexdev.minilogbook.domain.model.BgUnit
-import com.alexdev.minilogbook.domain.model.label
+import com.alexdev.minilogbook.domain.model.labelRes
 import com.alexdev.minilogbook.ui.theme.MiniLogbookTheme
 import org.junit.Rule
 import org.junit.Test
@@ -26,7 +26,7 @@ class AverageHeaderTest {
         }
 
         composeTestRule.onNodeWithText("5.50").assertIsDisplayed()
-        composeTestRule.onNodeWithText(BgUnit.MMOL.label()).assertIsDisplayed()
+        composeTestRule.onNodeWithText(composeTestRule.activity.getString(BgUnit.MMOL.labelRes())).assertIsDisplayed()
     }
 
     @Test
@@ -38,7 +38,7 @@ class AverageHeaderTest {
         }
 
         composeTestRule.onNodeWithText("99.10").assertIsDisplayed()
-        composeTestRule.onNodeWithText(BgUnit.MGDL.label()).assertIsDisplayed()
+        composeTestRule.onNodeWithText(composeTestRule.activity.getString(BgUnit.MGDL.labelRes())).assertIsDisplayed()
     }
 
     @Test

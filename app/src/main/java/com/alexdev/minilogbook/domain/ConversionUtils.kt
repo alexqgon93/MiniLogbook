@@ -5,7 +5,7 @@ import com.alexdev.minilogbook.domain.model.BgUnit
 private const val CONVERSION_FACTOR = 18.0182
 const val BG_MIN_MMOL = 2.8
 const val BG_MIN_MG_DL = BG_MIN_MMOL * CONVERSION_FACTOR
-const val BG_MAX_MMOL = 33.0
+const val BG_MAX_MMOL = 33.3
 const val BG_MAX_MG_DL = BG_MAX_MMOL * CONVERSION_FACTOR
 
 fun Double.toMgdl(): Double = this * CONVERSION_FACTOR

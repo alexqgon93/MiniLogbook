@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface BgEntryDao {
-    @Query("SELECT * FROM `bg_entry`")
+    @Query("SELECT * FROM `bg_entry` ORDER BY timestamp DESC")
     fun getBgEntries(): Flow<List<BgEntryEntity>>
 
     @Insert

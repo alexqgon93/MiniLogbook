@@ -71,7 +71,7 @@ private fun BgInputRowPreviewIdle() =
     MiniLogbookTheme {
         BgInputRow(
             value = "5.5",
-            unitLabel = "mmol/L",
+            unitLabel = stringResource(R.string.mmol_l),
             error = null,
             onValueChange = {},
             onSave = {},
@@ -84,8 +84,8 @@ private fun BgInputRowPreviewError() =
     MiniLogbookTheme {
         BgInputRow(
             value = "-3",
-            unitLabel = "mmol/L",
-            error = "Must be >= 0",
+            unitLabel = stringResource(R.string.mmol_l),
+            error = stringResource(R.string.input_error_below_min, "0.00", stringResource(R.string.mmol_l)),
             onValueChange = {},
             onSave = {},
         )
@@ -97,7 +97,7 @@ private fun BgInputRowPreviewEmpty() =
     MiniLogbookTheme {
         BgInputRow(
             value = "",
-            unitLabel = "mg/dL",
+            unitLabel = stringResource(R.string.mg_dl),
             error = null,
             onValueChange = {},
             onSave = {},

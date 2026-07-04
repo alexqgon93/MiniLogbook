@@ -31,7 +31,7 @@ fun BgValueTextField(
         isError = isError,
         placeholder = {
             Text(
-                text = "Ex.: 120",
+                text = stringResource(R.string.example_bg_value),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         },
@@ -85,7 +85,7 @@ private fun BgValueTextFieldPreviewMgDl() =
     MiniLogbookTheme {
         BgValueTextField(
             value = "99.10",
-            unitLabel = stringResource(id = R.string.mmg_dl),
+            unitLabel = stringResource(id = R.string.mg_dl),
             isError = false,
             onValueChange = {},
         )

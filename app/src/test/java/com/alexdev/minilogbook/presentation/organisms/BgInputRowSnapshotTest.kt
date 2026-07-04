@@ -43,7 +43,7 @@ class BgInputRowSnapshotTest : BaseSnapshotTest() {
                 BgInputRow(
                     value = "1.0",
                     unitLabel = "mmol/L",
-                    error = "Must be >= 2.8 mmol/L",
+                    error = "Must be >= 2.80 mmol/L",
                     onValueChange = {},
                     onSave = {},
                 )
@@ -58,7 +58,7 @@ class BgInputRowSnapshotTest : BaseSnapshotTest() {
                 BgInputRow(
                     value = "999.0",
                     unitLabel = "mmol/L",
-                    error = "Must be <= 33.3 mmol/L",
+                    error = "Must be <= 33.30 mmol/L",
                     onValueChange = {},
                     onSave = {},
                 )

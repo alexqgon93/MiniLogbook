@@ -26,8 +26,9 @@ object DatabaseModule {
                 context = context,
                 klass = AppDataBase::class.java,
                 name = DATABASE_NAME,
-            ).build()
+            ).fallbackToDestructiveMigration(dropAllTables = true)
+            .build()
 
     @Provides
-    fun providesFlightDao(appDatabase: AppDataBase): BgEntryDao = appDatabase.bgEntryDao()
+    fun providesBgEntryDao(appDatabase: AppDataBase): BgEntryDao = appDatabase.bgEntryDao()
 }

@@ -10,7 +10,7 @@ class InputErrorTextSnapshotTest : BaseSnapshotTest() {
     fun inputErrorText_visible() {
         paparazzi.snapshot {
             MiniLogbookTheme {
-                InputErrorText(error = "Must be >= 2.8 mmol/L")
+                InputErrorText(error = "Must be >= 2.80 mmol/L")
             }
         }
     }

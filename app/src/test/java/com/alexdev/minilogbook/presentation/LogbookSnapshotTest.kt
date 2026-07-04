@@ -66,7 +66,7 @@ class LogbookSnapshotTest : BaseSnapshotTest() {
                     state =
                         LogbookUiState(
                             inputValue = "-1",
-                            inputError = "Must be >= 2.8 mmol/L",
+                            inputError = LogbookInputError.BelowMin(2.8, BgUnit.MMOL),
                         ),
                     onEvent = {},
                 )

@@ -26,7 +26,7 @@ import com.alexdev.minilogbook.R
 import com.alexdev.minilogbook.domain.convertTo
 import com.alexdev.minilogbook.domain.model.BgEntry
 import com.alexdev.minilogbook.domain.model.BgUnit
-import com.alexdev.minilogbook.domain.model.label
+import com.alexdev.minilogbook.domain.model.labelRes
 import com.alexdev.minilogbook.domain.model.toBgStatus
 import com.alexdev.minilogbook.presentation.components.atoms.BgStatusBadge
 import com.alexdev.minilogbook.presentation.components.atoms.BgStatusIcon
@@ -44,19 +44,21 @@ fun EntryItem(
 ) {
     val displayValue =
         entry.valueInMmol.convertTo(from = BgUnit.MMOL, to = unit).let { "%.2f".format(it) }
+    val unitLabel = stringResource(unit.labelRes())
     val formattedTime =
         remember(key1 = entry.timestamp) {
             SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(entry.timestamp))
         }
     val status = entry.valueInMmol.toBgStatus()
     val statusStyle = status.toStyle()
+    val contentDescriptionText = "$formattedTime, $displayValue $unitLabel, ${statusStyle.label}"
 
     Card(
         modifier =
             modifier
                 .fillMaxWidth()
                 .semantics {
-                    contentDescription = "$formattedTime, $displayValue ${unit.label()}, ${statusStyle.label}"
+                    contentDescription = contentDescriptionText
                 },
         shape = RoundedCornerShape(size = 12.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -90,7 +92,7 @@ fun EntryItem(
                     modifier = Modifier.testTag(stringResource(R.string.entry_item_value_tag)),
                 )
                 Text(
-                    text = unit.label(),
+                    text = unitLabel,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier =

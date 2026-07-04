@@ -13,14 +13,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.alexdev.minilogbook.R
 import com.alexdev.minilogbook.domain.model.BgUnit
-import com.alexdev.minilogbook.domain.model.label
+import com.alexdev.minilogbook.domain.model.labelRes
 import com.alexdev.minilogbook.ui.theme.MiniLogbookTheme
 
 @Composable
@@ -31,6 +33,8 @@ fun UnitRadioButton(
     onSelected: () -> Unit,
 ) {
     val borderColor = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline
+    val unitLabel = stringResource(unit.labelRes())
+    val selectedStateLabel = stringResource(if (selected) R.string.selected_state else R.string.not_selected_state)
 
     FlowRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -42,7 +46,7 @@ fun UnitRadioButton(
                 .clickable(onClick = onSelected, role = Role.RadioButton)
                 .padding(horizontal = 12.dp, vertical = 10.dp)
                 .semantics {
-                    contentDescription = "${unit.label()}, ${if (selected) "selected" else "not selected"}"
+                    contentDescription = "$unitLabel, $selectedStateLabel"
                 },
     ) {
         RadioButton(
@@ -51,7 +55,7 @@ fun UnitRadioButton(
             colors = RadioButtonDefaults.colors(selectedColor = MaterialTheme.colorScheme.primary),
         )
         Text(
-            text = unit.label(),
+            text = unitLabel,
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
             color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,

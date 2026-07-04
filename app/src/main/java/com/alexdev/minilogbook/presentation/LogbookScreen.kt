@@ -20,7 +20,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alexdev.minilogbook.R
 import com.alexdev.minilogbook.domain.model.BgUnit
-import com.alexdev.minilogbook.domain.model.label
+import com.alexdev.minilogbook.domain.model.labelRes
 import com.alexdev.minilogbook.presentation.components.molecules.UnitSelector
 import com.alexdev.minilogbook.presentation.components.organisms.AverageHeader
 import com.alexdev.minilogbook.presentation.components.organisms.BgInputRow
@@ -60,7 +60,7 @@ internal fun LogbookContent(
                 fontWeight = FontWeight.SemiBold,
             )
             Text(
-                text = "Unit of measure",
+                text = stringResource(R.string.unit_of_measure),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -69,14 +69,34 @@ internal fun LogbookContent(
                 onUnitSelected = { onEvent(LogbookUiEvent.ChangeUnit(it)) },
             )
             Text(
-                text = "Glucose value",
+                text = stringResource(R.string.glucose_value),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             BgInputRow(
                 value = state.inputValue,
-                unitLabel = state.selectedUnit.label(),
-                error = state.inputError,
+                unitLabel = stringResource(state.selectedUnit.labelRes()),
+                error =
+                    state.inputError?.let { error ->
+                        when (error) {
+                            LogbookInputError.Required -> stringResource(R.string.input_error_required)
+                            LogbookInputError.InvalidNumber -> stringResource(R.string.input_error_invalid_number)
+                            is LogbookInputError.BelowMin ->
+                                stringResource(
+                                    R.string.input_error_below_min,
+                                    "%.2f".format(error.min),
+                                    stringResource(error.unit.labelRes()),
+                                )
+                            is LogbookInputError.AboveMax ->
+                                stringResource(
+                                    R.string.input_error_above_max,
+                                    "%.2f".format(error.max),
+                                    stringResource(error.unit.labelRes()),
+                                )
+                            LogbookInputError.SaveFailed -> stringResource(R.string.input_error_save_failed)
+                            LogbookInputError.LoadFailed -> stringResource(R.string.input_error_load_failed)
+                        }
+                    },
                 onValueChange = { onEvent(LogbookUiEvent.UpdateInputValue(input = it)) },
                 onSave = { onEvent(LogbookUiEvent.SaveReading) },
             )
@@ -133,7 +153,7 @@ private fun LogbookPreviewError() =
                 LogbookUiState(
                     selectedUnit = BgUnit.MMOL,
                     inputValue = "-3",
-                    inputError = "Must be >= 0",
+                    inputError = LogbookInputError.BelowMin(min = 0.0, unit = BgUnit.MMOL),
                     averageDisplay = "_",
                     entries = emptyList(),
                 ),

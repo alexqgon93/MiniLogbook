@@ -1,7 +1,5 @@
 package com.alexdev.minilogbook.presentation.utils
 
-import com.alexdev.minilogbook.domain.model.BgUnit
-import com.alexdev.minilogbook.domain.model.label
 import javax.inject.Inject
 
 class BgValueFormatter
@@ -11,6 +9,6 @@ class BgValueFormatter
 
         fun formatWithUnit(
             value: Double,
-            unit: BgUnit,
-        ): String = "${format(value)} ${unit.label()}"
+            unitLabel: String,
+        ): String = "${format(value)} $unitLabel"
     }

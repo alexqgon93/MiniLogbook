@@ -32,7 +32,7 @@ app/
     │   ├── model/          # BgEntry, BgUnit
     │   ├── repository/     # BgReadingRepository (interface)
     │   ├── usecase/        # GetAllReadingsUseCase, SaveBgReadingUseCase
-    │   └── ConvertionUtils # Extention functions to convert from or to
+    │   └── ConversionUtils # Extension functions for unit conversion
     ├── presentation/
     │   ├── components/
     │   │   ├── atoms/      # InputErrorText, UnitRadioButton, StatusBadge, BgStatusIcon

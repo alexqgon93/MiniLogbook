@@ -42,7 +42,7 @@ class BgInputRowTest {
                 BgInputRow(
                     value = "-1",
                     unitLabel = "mmol/L",
-                    error = "Must be >= 2.8 mmol/L",
+                    error = "Must be >= 2.80 mmol/L",
                     onValueChange = {},
                     onSave = {},
                 )
@@ -95,14 +95,14 @@ class BgInputRowTest {
                 BgInputRow(
                     value = "-1",
                     unitLabel = "mmol/L",
-                    error = "Must be >= 2.8 mmol/L",
+                    error = "Must be >= 2.80 mmol/L",
                     onValueChange = {},
                     onSave = {},
                 )
             }
         }
 
-        composeTestRule.onNodeWithText("Must be >= 2.8 mmol/L").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Must be >= 2.80 mmol/L").assertIsDisplayed()
     }
 
     companion object {
