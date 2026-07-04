@@ -6,7 +6,24 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+
+concurrency:
+  group: android-ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
+  dependency-review:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Dependency review
+        uses: actions/dependency-review-action@v4
+
   verify:
     runs-on: ubuntu-latest
 
@@ -31,3 +48,21 @@ jobs:
 
       - name: Verify screenshots
         run: ./gradlew app:verifyPaparazziDebug
+
+      - name: Verify release build
+        run: ./gradlew app:assembleRelease
+
+      - name: Upload release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-apk
+          path: app/build/outputs/apk/release/*.apk
+
+      - name: Upload test and lint reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-verification-reports
+          path: |
+            app/build/reports/
+            app/build/test-results/

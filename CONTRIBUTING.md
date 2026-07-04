@@ -26,3 +26,7 @@ Before opening a pull request, run:
 - Keep Room entities and database concerns in the data layer.
 - Prefer explicit migrations over destructive migrations.
 - Add tests for validation boundaries, persistence changes, and UI state transitions.
+
+## Architecture documentation
+
+Architecture decisions live under `docs/adr/`. Add or update an ADR when changing module boundaries, persistence strategy, migration policy, release process, observability, or privacy/security behavior.
