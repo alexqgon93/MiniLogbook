@@ -10,9 +10,9 @@ MiniLogbook stores blood glucose readings, which should be treated as sensitive 
 
 ## Backup
 
-The current manifest allows Android backup. Before production release, confirm whether health readings should be included in device/cloud backup for the target market and privacy requirements.
+The manifest allows Android backup for non-sensitive app state, but Room readings are excluded from cloud backup and device-to-device transfer through `backup_rules.xml` and `data_extraction_rules.xml`.
 
-If backup is not appropriate, disable it or exclude the database through backup rules.
+If future product requirements allow health-reading backup, that decision must be captured with explicit privacy wording, migration/restore behavior, and security review before removing the database exclusions.
 
 ## Logging
 

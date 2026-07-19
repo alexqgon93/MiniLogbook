@@ -1,28 +1,18 @@
 plugins {
-    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.ktlint)
 }
 
-android {
-    namespace = "com.alexdev.minilogbook.core.domain"
-    compileSdk {
-        version =
-            release(36) {
-                minorApiLevel = 1
-            }
-    }
+kotlin {
+    jvmToolchain(11)
+}
 
-    defaultConfig {
-        minSdk = 26
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
 dependencies {
     implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.hilt.android)
+    implementation(libs.javax.inject)
 }
