@@ -6,7 +6,7 @@ Accepted
 
 ## Context
 
-The app currently has a single Gradle module, `:app`, with clean package boundaries. This is sufficient for a small technical assessment but does not enforce architectural ownership or dependency direction.
+The app previously used a single Gradle module, `:app`, with clean package boundaries. That was sufficient for the initial product scope but did not enforce architectural ownership or dependency direction.
 
 ## Decision
 

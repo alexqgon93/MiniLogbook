@@ -1,6 +1,6 @@
 # Mini Logbook
 
-A single-screen Android application for tracking blood glucose (BG) readings, built as a technical assessment.
+A focused Android application for tracking blood glucose (BG) readings locally on device.
 
 ---
 
@@ -43,7 +43,7 @@ Clean Architecture with an MVI presentation layer.
 
 **Extension functions over a use case class for conversions** — `ConvertBgValueUseCase` was intentionally not wrapped in a class. The conversion logic is three lines of pure math with no dependencies, making top-level extension functions (`Double.toMgDl()`, `Double.toMmol()`, `Double.convertTo()`) the idiomatic Kotlin choice.
 
-**Atomic Design for UI components** — components are organised into atoms, molecules, and organisms. For a single-screen app this is acknowledged over-engineering, but it demonstrates awareness of scalable component architecture. The flat `components/` alternative was considered and deliberately rejected to show the pattern.
+**Atomic Design for UI components** — components are organised into atoms, molecules, and organisms to keep reusable UI boundaries explicit as the product grows. The flat `components/` alternative was considered and deliberately rejected to preserve a scalable component taxonomy.
 
 ---
 
@@ -105,14 +105,15 @@ The bounds are defined once in mmol/L and derived for mg/dL via the conversion f
 
 ### Unit tests (`src/test/`)
 - **`ConvertBgValueUseCaseTest`** — pure conversion logic, no mocks
-- **`LogbookViewModelTest`** — MVI state transitions tested with Turbine; `ConvertBgValueUseCase` used as real implementation (not mocked) since it has no dependencies
-  Covered scenarios:
+- **`LogbookViewModelTest`** — MVI state transitions tested with the real conversion logic because it is pure and dependency-free.
+
+Covered scenarios:
 - Unit conversion updates input value correctly
 - Save clears input and calls use case
 - Negative / below-minimum value sets error
 - Above-maximum value sets error
 - Error message reflects current unit after unit switch
--
+
 ### Compose UI tests (`src/androidTest/`)
 Instrumented tests running on API ≤ 33 (Espresso has a known incompatibility with `InputManager` on API 34+ that is unresolved upstream).
 
@@ -123,9 +124,9 @@ Covered per component:
 - `InputErrorTextTest` — visible / hidden
 - `UnitRadioButtonTest` — selected / unselected states, click callback
 - `UnitSelectorTest` — all units rendered, correct intent emitted on click
-- `ReadingItemTest` — mmol/L and mg/dL display
+- `EntryItemTest` — mmol/L and mg/dL display
 - `LogbookContentTest` — full screen integration: empty state, unit selection, input validation, average display, readings list
--
+
 ### Screenshot tests — Paparazzi (`src/test/`)
 
 Paparazzi 2.0.0-alpha05 with JUnit 5 (`setup()`/`teardown()` hooks).
@@ -176,11 +177,11 @@ Minimum SDK: **26** | Target SDK: **36**
 
 ---
 
-## What I would add with more time
+## Roadmap / production hardening
 
 - **Delete / edit readings** — swipe-to-delete on list items
 - **Pagination** — `LazyColumn` with paging for large reading histories
 - **Chart** — line chart of readings over time using Vico or MPAndroidChart
 - **Dark theme preview** — Paparazzi snapshot with `DeviceConfig` dark mode flag
 - **Robolectric** — migrate Compose UI tests to Robolectric to remove the API 34+ Espresso limitation and enable CI without an emulator
-- **CI pipeline** — GitHub Actions workflow running unit tests + Paparazzi verify on every PR
+- **Release automation** — signed release pipeline, changelog generation, and distribution-track promotion
