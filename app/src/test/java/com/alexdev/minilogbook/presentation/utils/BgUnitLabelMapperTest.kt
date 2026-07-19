@@ -1,6 +1,6 @@
 package com.alexdev.minilogbook.presentation.utils
 
-import com.alexdev.minilogbook.R
+import com.alexdev.minilogbook.core.ui.R
 import com.alexdev.minilogbook.domain.model.BgUnit
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

@@ -2,6 +2,7 @@ package com.alexdev.minilogbook.domain.usecase
 
 import com.alexdev.minilogbook.domain.model.BgEntry
 import com.alexdev.minilogbook.domain.repository.BgRepository
+import com.alexdev.minilogbook.testing.ReadingFixtures
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.first
@@ -18,12 +19,22 @@ class GetBgEntriesUseCaseTest {
     fun `GIVEN repository entries flow WHEN invoke is called THEN returns same emitted entries`() =
         runTest {
             val entries =
-                listOf(
-                    BgEntry(id = 1L, valueInMmol = 5.5, timestamp = 1000L),
-                    BgEntry(id = 2L, valueInMmol = 7.1, timestamp = 2000L),
+                ReadingFixtures.readings(
+                    5.5,
+                    7.1,
                 )
-            every { repository.getBgEntries() } returns flowOf(entries)
+            every { repository.getBgEntries(limit = any()) } returns flowOf(entries)
             val emitted = useCase().first()
             assertEquals(entries, emitted)
+        }
+
+    @Test
+    fun `GIVEN custom limit WHEN invoke is called THEN delegates limit to repository`() =
+        runTest {
+            every { repository.getBgEntries(limit = 25) } returns flowOf(emptyList())
+
+            val emitted = useCase(limit = 25).first()
+
+            assertEquals(emptyList<BgEntry>(), emitted)
         }
 }

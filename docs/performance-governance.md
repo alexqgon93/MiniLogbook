@@ -6,8 +6,8 @@ MiniLogbook is a small single-screen app. The current release build is R8-optimi
 
 ## Performance risks
 
-- Reading history is currently exposed as `Flow<List<BgEntry>>`.
-- A long history can increase memory pressure and recomposition work.
+- Reading history is exposed as a bounded query window instead of loading the full table.
+- A much longer product history may eventually need Paging 3 for interactive archive navigation.
 - `material-icons-extended` is convenient but increases dependency and binary size.
 
 ## Targets
@@ -22,7 +22,7 @@ For production growth, define these budgets:
 
 ## Required tooling when scope grows
 
-- Paging 3 or query-window loading for long reading history
+- Paging 3 if the product adds interactive archive navigation beyond the current bounded history window
 - baseline profile or macrobenchmark module for startup and scroll performance
 - APK size monitoring in CI
 - large-list Compose performance checks

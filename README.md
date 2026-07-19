@@ -22,38 +22,22 @@ A single-screen Android application for tracking blood glucose (BG) readings, bu
 Clean Architecture with an MVI presentation layer.
 
 ```
-app/
-└── src/main/java/com/alexdev/minilogbook/
-    ├── data/
-    │   ├── local/          # Room: Entity, DAO, AppDatabase
-    │   ├── mapper/         # Mapper: Mappers to domain and to entity models
-    │   └── repository/     # BgReadingRepositoryImpl
-    ├── domain/
-    │   ├── model/          # BgEntry, BgUnit
-    │   ├── repository/     # BgReadingRepository (interface)
-    │   ├── usecase/        # GetAllReadingsUseCase, SaveBgReadingUseCase
-    │   └── ConversionUtils # Extension functions for unit conversion
-    ├── presentation/
-    │   ├── components/
-    │   │   ├── atoms/      # InputErrorText, UnitRadioButton, StatusBadge, BgStatusIcon
-    │   │   ├── molecules/  # BgValueTextField, EntryItem, UnitSelector
-    │   │   └── organisms/  # AverageHeader, EntryList, BgInputRow
-    │   ├── utils/
-    │   │   └── BgValueFormatter # Formating units
-    │   ├── LogbookUiEvent.kt
-    │   ├── LogbookScreen.kt
-    │   ├── LogbookUiState.kt
-    │   └── LogbookViewModel.kt
-    ├── di/
-    │   ├── DatabaseModule.kt
-    │   ├── MiniLogbookApplication.kt
-    │   └── RepositoryModule.kt
-    └── MainActivity.kt
+├── app/                  # Application shell, Hilt composition root, MainActivity
+├── core/
+│   ├── domain/           # BgEntry, BgUnit, repository contracts, use cases, conversion
+│   ├── database/         # Room entity, DAO, AppDatabase, migrations
+│   ├── data/             # Repository implementation, mappers, system time provider
+│   ├── ui/               # Theme, design tokens, reusable Compose components
+│   └── testing/          # Shared fixtures and test utilities
+└── feature/
+    └── logbook/          # Logbook MVI state, ViewModel, screen, previews
 ```
 
 ### Key architectural decisions
 
 **Single source of truth in mmol/L** — all values are stored in mmol/L regardless of the selected unit. Conversion is a presentation-only concern, which simplifies persistence, average calculation, and unit switching significantly.
+
+**Bounded history loading** — the repository queries the most recent readings using a configurable limit instead of loading the full table into memory. Paging 3 remains the next step if full archive browsing is added.
 
 **MVI with a single `StateFlow<UiState>`** — the ViewModel exposes one immutable state object. The UI sends `LogbookIntent` sealed class instances and never mutates state directly. No `SharedFlow` or `Channel` was needed for this scope.
 

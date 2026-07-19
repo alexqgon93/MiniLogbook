@@ -24,3 +24,9 @@ dependencyResolutionManagement {
 
 rootProject.name = "Mini Logbook"
 include(":app")
+include(":core:domain")
+include(":core:database")
+include(":core:data")
+include(":core:testing")
+include(":core:ui")
+include(":feature:logbook")

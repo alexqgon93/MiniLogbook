@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
@@ -10,7 +10,7 @@ The app currently has a single Gradle module, `:app`, with clean package boundar
 
 ## Decision
 
-If the product grows, split the codebase into these modules:
+Split the codebase into these modules:
 
 - `:core:domain` — pure Kotlin models, validation, conversion, repository contracts, use cases
 - `:core:data` — repository implementations and data mappers
@@ -24,17 +24,19 @@ If the product grows, split the codebase into these modules:
 
 - Build boundaries will enforce Clean Architecture rules.
 - Shared UI and testing infrastructure become reusable.
-- The migration is larger than the current feature scope and should be done as a dedicated refactor.
+- The app module remains the composition root.
+- Feature and core modules now enforce clearer dependency direction.
+- App tests still live in `:app` for now; future work can redistribute tests closer to their owning modules.
 
 ## Migration sequence
 
-1. Create empty Gradle modules and wire dependency direction.
-2. Move domain models/use cases into `:core:domain`.
-3. Move Room entities/DAO/database/migrations into `:core:database`.
-4. Move repository implementations/mappers into `:core:data`.
-5. Move theme/design tokens/reusable components into `:core:ui`.
-6. Move logbook ViewModel/state/screen into `:feature:logbook`.
-7. Keep `:app` as composition root only.
+1. Created Gradle modules and wired dependency direction.
+2. Moved domain models/use cases into `:core:domain`.
+3. Moved Room entities/DAO/database/migrations into `:core:database`.
+4. Moved repository implementations/mappers into `:core:data`.
+5. Moved theme/design tokens/reusable components into `:core:ui`.
+6. Moved logbook ViewModel/state/screen into `:feature:logbook`.
+7. Kept `:app` as composition root only.
 
 ## Dependency direction
 

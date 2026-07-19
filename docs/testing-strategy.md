@@ -7,9 +7,9 @@
 - Paparazzi snapshot tests cover visual regression for core UI components.
 - Migration tests validate Room schema compatibility and data preservation.
 
-## Shared testing module target
+## Shared testing module
 
-When the app is modularized, create `:core:testing` for:
+The project includes `:core:testing` for:
 
 - test fixtures such as sample readings
 - fake repositories

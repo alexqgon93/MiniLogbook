@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Mini Logbook</string>
+    <string name="add_measurement">Add measurement</string>
+    <string name="mmol_l">mmol/L</string>
+    <string name="mg_dl">mg/dL</string>
+    <string name="your_average_is">Your average is %1$s %2$s</string>
+    <string name="example_bg_value">Ex.: 120</string>
+    <string name="unit_of_measure">Unit of measure</string>
+    <string name="glucose_value">Glucose value</string>
+    <string name="input_error_required">Value is required</string>
+    <string name="input_error_invalid_number">Invalid number</string>
+    <string name="input_error_below_min">Must be &gt;= %1$s %2$s</string>
+    <string name="input_error_above_max">Must be &lt;= %1$s %2$s</string>
+    <string name="input_error_save_failed">Failed to save. Please try again.</string>
+    <string name="input_error_load_failed">Failed to load readings. Please try again.</string>
+    <string name="retry">Retry</string>
+    <string name="selected_state">selected</string>
+    <string name="not_selected_state">not selected</string>
+    <string name="today_prefix">Today, %1$s</string>
+    <string name="reference_values_may_vary">* Reference values may vary</string>
+    <string name="entry_item_value_tag">entry_item_value</string>
+    <string name="entry_item_unit_tag">entry_item_unit</string>
+    <string name="your_average">Your average</string>
+    <string name="save_reading">Save reading</string>
+    <string name="entry_list_tag">entry list</string>
+    <string name="bg_status_low">Below target</string>
+    <string name="bg_status_normal">Within target</string>
+    <string name="bg_status_elevated">Above target</string>
+    <string name="bg_status_high">High</string>
+</resources>

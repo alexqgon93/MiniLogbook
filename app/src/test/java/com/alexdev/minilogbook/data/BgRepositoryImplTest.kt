@@ -45,7 +45,7 @@ class BgRepositoryImplTest {
                     BgEntryEntity(id = 1, valueInMmol = 5.5, timestamp = 1000L),
                     BgEntryEntity(id = 2, valueInMmol = 7.2, timestamp = 2000L),
                 )
-            every { dao.getBgEntries() } returns flowOf(daoEntries)
+            every { dao.getBgEntries(limit = any()) } returns flowOf(daoEntries)
             val result = repository.getBgEntries()
             val emitted = mutableListOf<List<BgEntry>>()
             result.collect { emitted.add(it) }
@@ -57,5 +57,15 @@ class BgRepositoryImplTest {
             assertEquals(2L, emitted.first()[1].id)
             assertEquals(7.2, emitted.first()[1].valueInMmol)
             assertEquals(2000L, emitted.first()[1].timestamp)
+        }
+
+    @Test
+    fun `given custom limit when getBgEntries is called then dao query uses that limit`() =
+        runTest {
+            every { dao.getBgEntries(limit = 25) } returns flowOf(emptyList())
+
+            repository.getBgEntries(limit = 25).collect { entries ->
+                assertEquals(emptyList<BgEntry>(), entries)
+            }
         }
 }
