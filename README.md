@@ -78,10 +78,14 @@ Material 3 with Emerald Green (`#10B981`) as primary color. Full light and dark 
 
 | Status | Range (mmol/L) | Range (mg/dL) | Color |
 |---|---|---|---|
-| Below target | < 2.8 | < 50.5 | 🔵 Blue |
-| Within target | 2.8 – 7.8 | 50.5 – 140 | 🟢 Green |
-| Above target | 7.8 – 10.0 | 140 – 180 | 🟠 Orange |
-| High | > 10.0 | > 180 | 🔴 Red |
+| Below target | < 2.8 | < ≈50.5 | 🔵 Blue |
+| Within target | ≥ 2.8 and < 7.8 | ≥ ≈50.5 and < ≈140.5 | 🟢 Green |
+| Above target | ≥ 7.8 and < 10.0 | ≥ ≈140.5 and < ≈180.2 | 🟠 Orange |
+| High | ≥ 10.0 | ≥ ≈180.2 | 🔴 Red |
+
+Status is always computed on the value in mmol/L (`toBgStatus()`); the mg/dL boundaries are those thresholds converted with the 18.0182 factor and rounded to one decimal (hence "≈"); the code never compares mg/dL values.
+
+Below target is shown only for stored values under 2.8 mmol/L; the input validator rejects such readings, so it cannot occur through normal entry.
 
 ---
 
