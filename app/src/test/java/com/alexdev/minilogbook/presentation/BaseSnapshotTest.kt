@@ -16,6 +16,7 @@ abstract class BaseSnapshotTest {
             Paparazzi(
                 deviceConfig = DeviceConfig.PIXEL_6,
                 theme = "Theme.MiniLogbook",
+                maxPercentDifference = MAX_PERCENT_DIFFERENCE,
             ).apply {
                 setup(
                     testName =
@@ -36,5 +37,11 @@ abstract class BaseSnapshotTest {
     @AfterEach
     fun tearDown() {
         paparazzi.teardown()
+    }
+
+    private companion object {
+        // Allows for font anti-aliasing differences between macOS and Linux runners;
+        // measured cross-OS difference is ~0.014%.
+        const val MAX_PERCENT_DIFFERENCE = 0.05
     }
 }

@@ -143,7 +143,7 @@ Paparazzi 2.0.0-alpha05 with JUnit 5 (`setup()`/`teardown()` hooks).
 ./gradlew app:verifyPaparazziDebug
 ```
 
-Golden images are committed under `src/test/snapshots/`.
+Golden images are committed under `src/test/snapshots/`. Screenshot tests allow a 0.05% pixel difference to absorb font anti-aliasing differences between macOS and Linux.
 
 > **Note on Paparazzi version:** `1.3.5` (last stable) is incompatible with Gradle 9.x / Kotlin 2.x. `2.0.0-alpha05` is the only version supporting this toolchain. The JUnit 5 API (`setup()`/`teardown()`) is required as the JUnit 4 `@get:Rule` approach does not trigger snapshot recording in this version.
 
